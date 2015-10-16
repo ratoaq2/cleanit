@@ -1,0 +1,28 @@
+sudo: false
+
+language: python
+
+python:
+  - 2.7
+  - 3.3
+  - 3.4
+
+env:
+  - PARSER=native
+  - PARSER=lxml
+
+cache:
+  directories:
+    - $HOME/.cache/pip
+
+before_cache:
+  - rm -f $HOME/.cache/pip/log/debug.log
+
+install:
+  - pip install -e .
+  - if [ $PARSER = "lxml" ]; then pip install lxml; fi
+  - pip install coveralls
+
+script: python setup.py test -a "--cov cleanit --verbose"
+
+after_success: coveralls
