@@ -27,8 +27,7 @@ class PyTest(TestCommand):
         sys.exit(errno)
 
 # requirements
-install_requirements = ['appdirs>=1.4.0', 'chardet>=2.3.0', 'click>=4.0', 'jsonschema>=2.5.1', 'pysrt>=1.0.1',
-                        'python-magic>=0.4.6', 'pyyaml>=3.11']
+install_requirements = ['appdirs>=1.4.0', 'click>=4.0', 'jsonschema>=2.5.1', 'pysrt>=1.0.1', 'pyyaml>=3.11']
 
 test_requirements = ['pytest', 'pytest-pep8', 'pytest-flakes', 'pytest-cov']
 

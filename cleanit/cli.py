@@ -38,7 +38,8 @@ def cleanit(config, force, test, debug, verbose, path):
         click.echo('Discarded %s' % discarded_paths, color='red')
 
     click.echo('Collected %d subtitles' % len(collected_subtitles), color='green')
-    for sub in collected_subtitles:
+    for i in reversed(range(len(collected_subtitles))):
+        sub = collected_subtitles[i]
         modified = api.clean_subtitle(sub, cfg.rules)
         if (modified or force) and not test:
             click.echo("Saving '%s'" % sub.path, color='green')
@@ -46,6 +47,8 @@ def cleanit(config, force, test, debug, verbose, path):
             click.echo("Saved '%s'" % sub.path, color='green')
         elif verbose > 0:
             click.echo("No modification for '%s'" % sub.path, color='green')
+        # to free up memory
+        del collected_subtitles[i]
 
 
 def scan(path, collected, discarded):
