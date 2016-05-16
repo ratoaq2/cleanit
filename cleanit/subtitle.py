@@ -61,7 +61,6 @@ class Subtitle(object):
                 modified = True
                 if modified_text is None:
                     del self.subtitle[i]
-                    break
                 else:
                     item.text = modified_text
 
