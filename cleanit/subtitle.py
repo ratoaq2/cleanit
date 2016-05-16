@@ -4,6 +4,8 @@ import logging
 import chardet
 import pysrt
 
+from .core import clean
+
 logger = logging.getLogger(__name__)
 
 
@@ -54,20 +56,14 @@ class Subtitle(object):
 
         modified = False
         for i, item in reversed(list(enumerate(self.subtitle))):
-            for rule in rules:
-                modified_text = rule.apply(item.text)
-                if not modified_text:
-                    if not rule.whitelist:
-                        logger.debug("Match found: '%s'. Removing item:\n%s" % (rule, item))
-                        del self.subtitle[i]
-                        modified = True
-                    else:
-                        logger.debug("Match found: '%s' in whitelist. Keeping item:\n%s" % (rule, item))
+            modified_text = clean(item.text, rules)
+            if modified_text != item.text:
+                modified = True
+                if modified_text is None:
+                    del self.subtitle[i]
                     break
-                elif modified_text != item.text:
-                    logger.debug("Match found: '%s'. Changing item:\n%s\nto\n\n%s\n" % (rule, item, modified_text))
+                else:
                     item.text = modified_text
-                    modified = True
 
         if modified and clean_indexes:
             self.subtitle.clean_indexes()

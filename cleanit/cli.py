@@ -27,6 +27,14 @@ def cleanit(config, force, test, debug, verbose, path):
         logger.setLevel(logging.DEBUG)
 
     cfg = Config.from_file(config)
+    if not cfg:
+        click.echo('No configuration file is defined. Use --config <config.yml> or create ~/.config/cleanit/config.yml',
+                   color='red')
+        return
+
+    if not cfg.rules:
+        click.echo('No rules defined. Check your configuration file %s' % cfg.path, color='red')
+        return
 
     collected_subtitles = []
     discarded_paths = []
@@ -34,8 +42,16 @@ def cleanit(config, force, test, debug, verbose, path):
     for p in path:
         scan(p, collected_subtitles, discarded_paths)
 
-    if verbose and discarded_paths:
-        click.echo('Discarded %s' % discarded_paths, color='red')
+    if discarded_paths:
+        if len(discarded_paths) == len(path):
+            click.echo('Processing input as string...', color='green')
+            for value in discarded_paths:
+                result = api.clean(value, cfg.rules)
+                click.echo(result, color='blue')
+            return
+
+        if verbose:
+            click.echo('Discarded %s' % discarded_paths, color='red')
 
     click.echo('Collected %d subtitles' % len(collected_subtitles), color='green')
     for i in reversed(range(len(collected_subtitles))):

@@ -17,13 +17,14 @@ class Rule(object):
         return '<%s [%s, %s, %s, %s]>' % (
             self.__class__.__name__, self.regex.pattern, self.flags, self.replacement, self.whitelist)
 
-    def apply(self, text):
+    def apply(self, text, replacement=None):
         m = self.regex.search(text)
         if not m:
             return text
 
-        if self.replacement:
-            return self.regex.sub(self.replacement, text)
+        repl = self.replacement or replacement
+        if repl is not None:
+            return self.regex.sub(repl, text)
 
         return None
 

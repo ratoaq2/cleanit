@@ -5,6 +5,7 @@ match_type = {'type': 'string', 'enum': ['exact', 'contains', 'startswith', 'end
 whitelist = {'type': 'boolean'}
 flag = {'type': 'string', 'enum': ['ignorecase', 'dotall', 'multiline', 'locale', 'unicode', 'verbose']}
 flags = {'oneOf': [flag, {'type': 'array', 'items': flag}]}
+replacement_type = {'type': 'string'}
 
 rule_tuple_string_string = {
     'type': 'object',
@@ -20,7 +21,7 @@ rule_tuple_string_dict = {
         '.+': {
             'type': 'object',
             'properties': {
-                'replacement': {'type': 'string'},
+                'replacement': replacement_type,
                 'type': rule_type,
                 'match': match_type,
                 'flags': flags,
@@ -64,6 +65,7 @@ template = {
         'type': rule_type,
         'match': match_type,
         'flags': flags,
+        'replacement': replacement_type,
         'whitelist': whitelist
     },
     'additionalProperties': False

@@ -44,7 +44,7 @@ class Config(object):
                 target = {}
                 flags = set([])
                 if template:
-                    target.update({k: v for k, v in template.items() if v and v != 'flags'})
+                    target.update({k: v for k, v in template.items() if v is not None and v != 'flags'})
                     flags |= set((lambda v: v if isinstance(v, list) else [v])(template.get('flags', [])))
 
                 target.update({k: v for k, v in group.items() if v and k not in ['template', 'rules', 'flags']})
