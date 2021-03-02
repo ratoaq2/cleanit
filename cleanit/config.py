@@ -51,7 +51,7 @@ class Config(object):
                 flags |= set((lambda v: v if isinstance(v, list) else [v])(group.get('flags', [])))
 
                 if isinstance(rule, dict):
-                    pattern, rule_config = rule.items()[0]
+                    pattern, rule_config = list(rule.items())[0]
                     target.update({'pattern': pattern})
                     if isinstance(rule_config, dict):
                         target.update({k: v for k, v in rule_config.items() if v and v != 'flags'})
@@ -69,7 +69,7 @@ class Config(object):
             raise ValueError("No rules defined in config file '%s'" % self.path)
 
         # Whitelist rules should come first
-        rules.sort(key=lambda s: s.whitelist, reverse=True)
+        rules.sort(key=lambda s: bool(s.whitelist), reverse=True)
 
         self.rules = rules
 

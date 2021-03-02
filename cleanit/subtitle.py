@@ -32,7 +32,7 @@ class Subtitle(object):
         # try to decode
         logger.debug('Trying encodings %r', encodings)
 
-        with open(path, 'r') as f:
+        with open(path, 'rb') as f:
             content = f.read()
             for encoding in encodings:
                 try:
