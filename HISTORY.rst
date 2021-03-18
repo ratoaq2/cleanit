@@ -1,5 +1,10 @@
 Changelog
 ---------
+0.4.1
+^^^^^
+**release date:** 2021-03-16
+* Fixes missing default configuration files
+
 0.4.0
 ^^^^^
 **release date:** 2021-03-16
