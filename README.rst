@@ -87,21 +87,23 @@ YAML Configuration file
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: yaml
-templates:
-  - &ocr
-    tags:
-      - ocr
-      - minimal
-      - default
-    priority: 10000
-    languages: en
-rules:
-  replace-l-to-I-character[ocr:en]:
-    <<: *ocr
-    patterns: '\bl\b'
-    replacement: 'I'
-    examples:
-      ? |
-        And if l refuse?
-      : |
-        And if I refuse?
+
+    templates:
+      - &ocr
+        tags:
+          - ocr
+          - minimal
+          - default
+        priority: 10000
+        languages: en
+
+    rules:
+      replace-l-to-I-character[ocr:en]:
+        <<: *ocr
+        patterns: '\bl\b'
+        replacement: 'I'
+        examples:
+          ? |
+            And if l refuse?
+          : |
+            And if I refuse?
