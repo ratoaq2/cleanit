@@ -1,0 +1,70 @@
+templates:
+  - &tidy
+    tags:
+      - tidy
+      - default
+      - minimal
+    priority: -10000
+
+rules:
+  replace-multiple-spaces-with-single-space[tidy]:
+    <<: *tidy
+    patterns: '\s{2,}'
+    replacement: ' '
+    examples:
+      ? |
+        Foo     bar.
+      : |
+        Foo bar.
+  drop-extra-spaces-before-punctuation[tidy]:
+    <<: *tidy
+    patterns: '(?P<x>\S)\s+(?P<y>\.{1,3})$'
+    replacement: '\g<x>\g<y>'
+    examples:
+      ? |
+        "FooBar"  ...
+      : |
+        "FooBar"...
+  add-extra-space-after-dash[tidy]:
+    <<: *tidy
+    patterns: '(?:^(?P<x>|(?:\<\w\>)))-(?P<y>(?:\.{2,3})?[''\"]?[\w|(]+)'
+    replacement: '\g<x>- \g<y>'
+    flags: multiline
+    examples:
+      ? |
+        <i>-Francine, o que houve?
+        -O que aconteceu? Diga-me!</i>
+      : |
+        <i>- Francine, o que houve?
+        - O que aconteceu? Diga-me!</i>
+  drop-only-punctuation-lines[tidy]:
+    <<: *tidy
+    patterns: '^\s*\.+\s*$'
+    examples:
+      - '...'
+  drop-only-spaces-lines[tidy]:
+    <<: *tidy
+    patterns: '^\s*$'
+    examples:
+      - '     '
+  drop-starting-dash-for-single-lines[tidy]:
+    <<: *tidy
+    patterns: '^\-\s*(?P<x>[^\n\r]*|(.*[\n\r][^-].*))$'
+    replacement: '\g<x>'
+    examples:
+      ? |
+        - At 28 minutes past midnight,
+      : |
+        At 28 minutes past midnight,
+      ? |
+        - Francine, o que houve?
+        - O que aconteceu? Diga-me!
+      : |
+        - Francine, o que houve?
+        - O que aconteceu? Diga-me!
+      ? |
+        - Oh, if you were my girl,
+        I wouldn't leave you alone.
+      : |
+        Oh, if you were my girl,
+        I wouldn't leave you alone.

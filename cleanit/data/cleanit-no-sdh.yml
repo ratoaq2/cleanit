@@ -1,0 +1,215 @@
+templates:
+  - &no-sdh
+    tags:
+      - no-sdh
+      - default
+    priority: 9800
+
+rules:
+  drop-brackets-lines[no-sdh]:
+    <<: *no-sdh
+    patterns:
+      - '^(?:\-\s*)?(?P<x>.*)\n(?:\-\s*)?(?:\([[:upper:]\s]+\)|\[[[:upper:]\s]+\])$'
+      - '^(?:\-\s*)?(?:\([[:upper:]\s]+\)|\[[[:upper:]\s]+\])\n(?:\-\s*)?(?P<x>.*)$'
+    replacement: '\g<x>'
+    examples:
+      ? |
+        - Do you believe him?
+        - (KNOCK AT DOOR)
+      : |
+        Do you believe him?
+      ? |
+        Do you believe him?
+        - (SNICKERS)
+      : |
+        Do you believe him?
+      ? |
+        Do you believe him?
+        - [SNICKERS]
+      : |
+        Do you believe him?
+      ? |
+        - Do you believe him?
+        (KNOCK AT DOOR)
+      : |
+        Do you believe him?
+      ? |
+        Do you believe him?
+        (SNICKERS)
+      : |
+        Do you believe him?
+      ? |
+        - (SNICKERS)
+        - Do you believe him?
+      : |
+        Do you believe him?
+      ? |
+        - [SNICKERS]
+        - Do you believe him?
+      : |
+        Do you believe him?
+      ? |
+        (KNOCK AT DOOR)
+        - Do you believe him?
+      : |
+        Do you believe him?
+      ? |
+        - (SNICKERS)
+        Do you believe him?
+      : |
+        Do you believe him?
+      ? |
+        (KNOCK AT DOOR)
+        Do you believe him?
+      : |
+        Do you believe him?
+  drop-brackets[no-sdh]:
+    <<: *no-sdh
+    patterns: '^(?:\([[:upper:]\s]+\)|\[[[:upper:]\s]+\])(?:\s*?\n\-\s*?[[:upper:]\s]+\:\s)?\s*(?P<x>.*)'
+    replacement: '\g<x>'
+    flags: dotall
+    examples:
+      ? |
+        (WHISPERS) I've never done this
+        with the power so low before.
+      : |
+        I've never done this
+        with the power so low before.
+      ? |
+        (KNOCK AT DOOR) It's okay. I'm with you.
+      : |
+        It's okay. I'm with you.
+      ? |
+        (CLEARS THROAT) But you don't
+        need to be a nuclear scientist
+      : |
+        But you don't
+        need to be a nuclear scientist
+      ? |
+        [CLEARS THROAT] But you don't
+        need to be a nuclear scientist
+      : |
+        But you don't
+        need to be a nuclear scientist
+      ? |
+        (KNOCK AT DOOR)
+        - LEGASOV K: At 28 minutes past midnight,
+      : |
+        At 28 minutes past midnight,
+  drop-brackets-single-line[no-sdh]:
+    <<: *no-sdh
+    patterns: '^(?:(?:\([^\(\)]+\))|(?:\[[^\[\]]+\]))$'
+    examples:
+      - '(GRUNTS SOFTLY)'
+      - '(KNOCK AT DOOR)'
+      - '(SIGHS)'
+      - |
+        ("WHEN I'M CALLING YOU" PLAYING ON RADIO)
+      - '[German]'
+  drop-brackets-end-of-line[no-sdh]:
+    <<: *no-sdh
+    patterns: '(?P<x>.*)(?:(?:\([^\(\)]+\))|(?:\[[^\[\]]+\]))(?P<y>.*)'
+    replacement: '\g<x>\g<y>'
+    examples:
+      ? |
+        AL: Get out of here. (CONTINUES COUGHING)
+      : |
+        AL: Get out of here.
+      ? |
+        AL: Get out of here. [CONTINUES COUGHING]
+      : |
+        AL: Get out of here.
+  replace-character-name-with-dash[no-sdh]:
+    <<: *no-sdh
+    patterns: '^(?:(?P<x>\-\s*)?[^[:lower:]]+:\s*(?P<y>.*[[:lower:]]+.*))$'
+    flags: multiline
+    replacement : '- \g<y>'
+    examples:
+      ? |
+        STEPASHIN: Comrade Khomyuk.
+      : |
+        - Comrade Khomyuk.
+      ? |
+        NEWARK: NOVA JERSEY
+      : |
+        NEWARK: NOVA JERSEY
+      ? |
+        NOVA YORK: NY
+      : |
+        NOVA YORK: NY
+      ? |
+        FILADÉLFIA: PENSILVÂNIA
+      : |
+        FILADÉLFIA: PENSILVÂNIA
+      ? |
+        NAVIO DE COMANDO DA ONU:
+        U.S.S. ARGUS
+      : |
+        NAVIO DE COMANDO DA ONU:
+        U.S.S. ARGUS
+      ? |
+        CAMP HUMPHREYS: COREIA DO SUL
+      : |
+        CAMP HUMPHREYS: COREIA DO SUL
+      ? |
+        FROTA DA ONU: 100 MILHAS
+        AO NORTE DAS BERMUDAS
+      : |
+        FROTA DA ONU: 100 MILHAS
+        AO NORTE DAS BERMUDAS
+      ? |
+        ZONA DE SEGURANÇA
+        DE FREEPORT: NOVA ESCÓCIA
+      : |
+        ZONA DE SEGURANÇA
+        DE FREEPORT: NOVA ESCÓCIA
+      ? |
+        "AOS INCRÉDULOS
+        E OS SEXUALMENTE IMORAIS:
+      : |
+        "AOS INCRÉDULOS
+        E OS SEXUALMENTE IMORAIS:
+      ? |
+        O LUGAR DELES É NO LAGO DE FOGO
+        QUE ARDE COM ENXOFRE:
+      : |
+        O LUGAR DELES É NO LAGO DE FOGO
+        QUE ARDE COM ENXOFRE:
+      ? |
+        TE VI NO CHAT: AQUI UMAS FOTOS
+        PICANTES COM MINHA ESPOSA:
+      : |
+        TE VI NO CHAT: AQUI UMAS FOTOS
+        PICANTES COM MINHA ESPOSA:
+      ? |
+        AVISE SE QUISER MAIS:
+      : |
+        AVISE SE QUISER MAIS:
+      ? |
+        MAN 1: A beauty from beyond the Wall.
+      : |
+        - A beauty from beyond the Wall.
+      ? |
+        MAN 1: Oh, if you were my girl,
+        I wouldn't leave you alone.
+      : |
+        - Oh, if you were my girl,
+        I wouldn't leave you alone.
+      ? |
+        - BRANT: Right.
+        - (GILLY CRYING)
+      : |
+        - Right.
+        - (GILLY CRYING)
+      ? |
+        DEREK: Turn her over.
+        BRANT: All right.
+      : |
+        - Turn her over.
+        - All right.
+      ? |
+        - Valar Morghulis.
+        - ALL: Valar Dohaeris.
+      : |
+        - Valar Morghulis.
+        - Valar Dohaeris.

@@ -1,0 +1,16 @@
+templates:
+  - &no-spam-text-contains-ignorecase
+    type: text
+    flags: ignorecase
+    tags:
+      - no-spam
+      - default
+    priority: 1000
+    languages: en
+
+rules:
+  drop-ads-and-credits[no-spam:en]:
+    <<: *no-spam-text-contains-ignorecase
+    patterns: 'subtitles by '
+    examples:
+      - 'Subtitles by FooBar'

@@ -1,0 +1,30 @@
+templates:
+  - &no-lyrics
+    tags:
+      - no-lyrics
+      - default
+    priority: 9700
+
+rules:
+  drop-music-lines[no-lyrics]:
+    <<: *no-lyrics
+    patterns:
+      - '^(?:(?:(?:\<\w\>)|\W)*)\s*♪\s*(?P<x>.*?)\s*♪\s*(?:(?:(?:\<\/\w\>)|\W)*)$'
+      - '^(?:(?:(?:\<\w\>)|\W)*)\s*♪\s*(?P<x>.*?)\s*(?:(?:(?:\<\/\w\>)|\W)*)$'
+      - '^(?:(?:(?:\<\w\>)|\W)*)\s*(?P<x>.*?)\s*♪\s*(?:(?:(?:\<\/\w\>)|\W)*)$'
+    flags: multiline
+    replacement: ''
+    examples:
+      ? |
+        <i>- ♪ Those icy fingers ♪</i>
+        - Cigars? Cigarettes?
+      : |
+        - Cigars? Cigarettes?
+      ? |
+        <i>♪ Sweetheart</i>
+      ? |
+        <i>♪ That old black magic ♪</i>
+      ? |
+        ♪ (TENSE MUSIC PLAYS) ♪
+      ? |
+        <i>Sweetheart ♪</i>

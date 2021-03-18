@@ -1,5 +1,17 @@
 Changelog
 ---------
+0.4.0
+^^^^^
+**release date:** 2021-03-16
+* Major refactoring
+* Drop python 2 support
+* Added support for languages and tags
+* Added default rules
+
+0.3.0
+^^^^^
+**release date:** 2021-03-02
+* Python 3.x support
 
 0.2.1
 ^^^^^

@@ -1,0 +1,19 @@
+templates:
+  - &no-spam-text-contains-ignorecase
+    type: text
+    flags: ignorecase
+    tags:
+      - no-spam
+      - default
+    priority: 1000
+    languages: pt
+
+rules:
+  drop-ads-and-credits[no-spam:pt]:
+    <<: *no-spam-text-contains-ignorecase
+    patterns:
+      - 'legendas.tv'
+      - 'tradutora: '
+    examples:
+      - '<b>www.legendas.tv</b>'
+      - 'Tradutora: FooBar'

@@ -1,0 +1,24 @@
+templates:
+  - &tidy
+    tags:
+      - tidy
+      - minimal
+      - default
+    priority: -10000
+    languages: pt
+
+rules:
+  drop-interjections-single-lines[tidy:pt]:
+    <<: *tidy
+    patterns: '^((Ee*i+)|(Aa*h+)|(Oo*h+)|(Hu*m+))\W*$'
+    examples:
+      - 'Ah?!?'
+      - 'Aahh?!?'
+      - 'Ahhhh?!?'
+      - 'Oh.'
+      - 'Oohhh.'
+      - 'Ohhh.'
+      - 'Hum'
+      - 'Huuummm'
+      - 'Eiii!!'
+      - 'Eeiii!!'

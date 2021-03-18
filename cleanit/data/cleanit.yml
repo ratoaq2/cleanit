@@ -1,0 +1,6 @@
+aliases:
+  '[:upper:]': 'A-ZŠŒŽÀ-ÖØÞ'
+  '[:lower:]': 'a-zšœžà-öøþ'
+  '[:upper-vowel:]': 'AEIOUÀ-ÅÈ-ÏÒ-ÖÙ-Ü'
+  '[:lower-vowel:]': 'aeiouà-åè-ïò-öù-ü'
+  '[:vowel:]': 'aeiouà-åè-ïò-öù-üAEIOUÀ-ÅÈ-ÏÒ-ÖÙ-Ü'

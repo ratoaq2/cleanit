@@ -1,92 +1,71 @@
 # -*- coding: utf-8 -*-
 import os
+import re
+from typing import List, Collection, Iterable
 
-import jsonschema
 import logging
-import yaml
+from jsonschema import ValidationError
 
-from . import __title__, __author__, schema
-from .rule import Rule
+from . import __title__, __author__
+from .rule import Rule, Rules
+from .utils import load_config_file, merge_options
 
-from appdirs import user_config_dir
-
+from appdirs import AppDirs
+from babelfish import Language
 
 logger = logging.getLogger(__name__)
+here = os.path.abspath(os.path.dirname(__file__))
+
+FILENAME_RE = re.compile(r'^cleanit(-[\w-]+)?(\.\w+(-\w+){0,2})?.(ya?ml|json)$')
 
 
-class Config(object):
+def get_default_config_files():
+    dirs = AppDirs(appname=__title__, appauthor=__author__)
+    folders = [os.path.join(here, 'data'), dirs.site_config_dir, dirs.user_config_dir]
 
-    def __init__(self, path):
-        #: Path to the configuration file
-        self.path = path
-        self.json = None
-        self.rules = None
+    locations = []
+    for folder in folders:
+        try:
+            locations.extend([os.path.abspath(os.path.join(folder, f)) for f in os.listdir(folder) if FILENAME_RE.search(f)])
+        except FileNotFoundError as e:
+            logger.debug(f"Discarding location '{folder}'. {str(e)}")
 
-    def load(self):
-        with open(self.path, 'r') as ymlfile:
-            self.json = yaml.safe_load(ymlfile)
+    return locations
 
-    def consolidate(self):
-        jsonschema.validate(self.json, schema.root)
 
-        templates = self.json.get('templates', {})
-        groups = self.json.get('groups', {})
-        rules = []
+def load_configuration(*locations: str):
+    configurations = []
+    for location in locations:
+        data = load_config_file(location)
+        configurations.append(data)
+        logger.debug(f'Loaded configuration from {location}')
+    return configurations
 
-        for name, group in groups.items():
-            template_name = group.get('template')
 
-            template = templates.get(template_name) if template_name else None
-            if not template and template_name:
-                raise ValueError("Template '%s' referenced in group '%s' does not exist" % (template_name, group))
+default_config = merge_options(*load_configuration(*get_default_config_files()))
 
-            for rule in group.get('rules', []):
-                target = {}
-                flags = set([])
-                if template:
-                    target.update({k: v for k, v in template.items() if v is not None and v != 'flags'})
-                    flags |= set((lambda v: v if isinstance(v, list) else [v])(template.get('flags', [])))
 
-                target.update({k: v for k, v in group.items() if v and k not in ['template', 'rules', 'flags']})
-                flags |= set((lambda v: v if isinstance(v, list) else [v])(group.get('flags', [])))
+class Config:
+    def __init__(self, *args: dict):
+        self.data = merge_options(default_config, *args)
+        aliases = self.data.get('aliases', {})
+        rules: List[Rule] = []
 
-                if isinstance(rule, dict):
-                    pattern, rule_config = list(rule.items())[0]
-                    target.update({'pattern': pattern})
-                    if isinstance(rule_config, dict):
-                        target.update({k: v for k, v in rule_config.items() if v and v != 'flags'})
-                        flags |= set((lambda v: v if isinstance(v, list) else [v])(rule_config.get('flags', [])))
-                    else:
-                        target.update({'replacement': rule_config})
-                else:
-                    target.update({'pattern': rule})
+        for name, r in self.data.get('rules', {}).items():
+            rules.append(Rule(name=name, aliases=aliases, **r))
 
-                if target:
-                    target.update({'flags': list(flags)})
-                    rules.append(Rule.from_config(target))
-
-        if not rules:
-            raise ValueError("No rules defined in config file '%s'" % self.path)
-
-        # Whitelist rules should come first
-        rules.sort(key=lambda s: bool(s.whitelist), reverse=True)
-
+        rules.sort(key=lambda s: s.priority, reverse=True)
         self.rules = rules
 
-    @staticmethod
-    def from_file(path=None):
-        file_name = 'config.yml'
+    @classmethod
+    def from_path(cls, path: str = None):
+        folders = [path] if path and os.path.isdir(path) else []
+        locations = [path] if path and os.path.isfile(path) else []
 
-        locations = [path, os.path.join(path, file_name)] if path else []
-        locations += [os.path.join(user_config_dir(appname=__title__, appauthor=__author__), file_name)]
+        for folder in folders:
+            locations.extend([f for f in os.listdir(folder) if FILENAME_RE.search(f)])
 
-        for location in locations:
-            if os.path.isfile(location):
-                try:
-                    config = Config(location)
-                    config.load()
-                    config.consolidate()
+        return Config(*load_configuration(*locations))
 
-                    return config
-                except IOError as e:
-                    logger.warn("Ignoring invalid configuration file '%s'. %s" % (location, str(e)))
+    def select_rules(self, tags: Collection[str] = None, languages: Collection[Language] = None):
+        return Rules(rules=self.rules, tags=tags, languages=languages)

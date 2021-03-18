@@ -1,0 +1,83 @@
+templates:
+  - &ocr
+    tags:
+      - ocr
+      - default
+      - minimal
+    priority: 10000
+    languages: pt
+
+rules:
+  replace-Oo-to-O-character[ocr:pt]:
+    <<: *ocr
+    patterns: '\bOo\b'
+    replacement: 'O'
+    examples:
+      ? |
+        Oo que foi isso?
+      : |
+        O que foi isso?
+  fix-irmã-accents[ocr:pt]:
+    <<: *ocr
+    patterns: '\b(?P<x>[iI][rR][mM])[aá](?P<y>[oOsS])?'
+    replacement: '\g<x>ã\g<y>'
+    examples:
+      Irmás: Irmãs
+      irmá: irmã
+      irmáozinho: irmãozinho
+      irmás: irmãs
+      irmázinha: irmãzinha
+  fix-IRMÃ-accents[ocr:pt]:
+    <<: *ocr
+    patterns: '\b(?P<x>[iI][rR][mM])[AÁ](?P<y>[oOsS])?\b'
+    replacement: '\g<x>Ã\g<y>'
+    examples:
+      IRMÁS: IRMÃS
+  replace-sss-to-ss-characters[ocr:pt]:
+    <<: *ocr
+    patterns: '(?P<x>[[:vowel:]])s(?P<s>s)s(?P<y>[[:vowel:]])?'
+    flags: ignorecase
+    replacement: '\g<x>\g<s>\g<s>\g<y>'
+    examples:
+      AssSassinos: Assassinos
+      voSsSa: vossa
+  replace-ár-l-to-á-l-suffix[ocr:pt]:
+    <<: *ocr
+    patterns: '(?P<x>\wá)r(?P<y>-l[ao])'
+    flags: ignorecase
+    replacement: '\g<x>\g<y>'
+    examples:
+      machucár-la: machucá-la
+      machucár-los: machucá-los
+      mandár-la: mandá-la
+      mudár-la: mudá-la
+      nomeár-lo,: nomeá-lo,
+      Roubár-la: Roubá-la
+  fix-não/pão/vão-accents[ocr:pt]:
+    <<: *ocr
+    patterns: '\b(?P<x>[npvNPV])[áâ](?P<y>[oO])'
+    replacement: '\g<x>ã\g<y>'
+    examples:
+      Nâo: Não
+      náo: não
+      páo: pão
+      váo: vão
+  fix-NÃO/PÃO/VÃO-accents[ocr:pt]:
+    <<: *ocr
+    patterns: '\b(?P<x>[npvNPV])[ÁÂ](?P<y>[oO])'
+    replacement: '\g<x>Ã\g<y>'
+    examples:
+      NÁO: NÃO
+      PÁO: PÃO
+      VÁO: VÃO
+  replace-mocê-to-você[ocr:pt]:
+    <<: *ocr
+    patterns:
+      - '\b(?P<x>M)(?P<y>ocês?)\b'
+      - '\b(?P<x>M)(?P<y>OCÊS?)\b'
+    replacement: 'V\g<y>'
+    examples:
+      Mocê: Você
+      Mocês: Vocês
+      MOCÊ: VOCÊ
+      MOCÊS: VOCÊS

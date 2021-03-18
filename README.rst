@@ -16,7 +16,19 @@ Subtitles extremely clean.
 
 :Project page: https://github.com/ratoaq2/cleanit
 
-**CleanIt** is a command line tool (written in python) that helps you to keep your subtitles clean. You can specify rules to detect subtitle entries to be removed or patterns to be replaced. Simple text matching or complex regex can be used.
+**CleanIt** is a command line tool (written in python) that helps you to keep your subtitles clean.
+You can specify your own rules to detect entries to be removed or patterns to be replaced.
+Simple text matching or complex regex can be used.
+It comes with standard rules out of the box:
+
+* ocr: Fix common OCR errors
+* tidy: Fix common formatting issues (e.g.: extra/missing spaces after punctuation)
+* no-sdh: Remove SDH descriptions
+* no-lyrics: Remove lyrics
+* no-spam: Remove ads and spams
+* no-style: Remove font style tags like <i> and <b>
+* minimal: includes only ocr and tidy rules
+* default: includes all rules except no-style
 
 Usage
 -----
@@ -24,91 +36,72 @@ CLI
 ^^^
 Clean subtitles::
 
-    $ cleanit --config my-config.yml my-subtitle.srt
-    Collected 1 subtitles
-    Saving <Subtitle [my-subtitle.srt]>
-    Saved <Subtitle [my-subtitle.srt]>
+    $ cat mysubtitle.srt
+    1
+    00:00:46,464 --> 00:00:48,549
+    -And then what?
+    -| don't know.
 
-Library
-^^^^^^^
-How to clean subtitles in a specific path using a specific configuration:
+    2
+    00:49:07,278 --> 00:49:09,363
+    - If you cross the sea
+    with an army you bought ...
 
+
+    $ cleanit -t default mysubtitle.en.srt
+    1 subtitle collected / 0 subtitle filtered out / 0 path ignored
+    1 subtitle saved / 0 subtitle unchanged
+
+    $ cat mysubtitle.srt
+    1
+    00:00:46,464 --> 00:00:48,549
+    - And then what?
+    - I don't know.
+
+    2
+    00:49:07,278 --> 00:49:09,363
+    If you cross the sea
+    with an army you bought...
+
+
+    $ cleanit -t ocr -t no-sdh -t tidy -l en -l pt-BR ~/subtitles/
+    423 subtitles collected / 107 subtitles filtered out / 0 path ignored
+    Cleaning subtitles  [####################################]  100%
+    268 subtitles saved / 155 subtitles unchanged
+
+
+API
+^^^
 .. code:: python
 
-    from cleanit.api import clean_subtitle, save_subtitle
-    from cleanit.config import Config
-    from cleanit.subtitle import Subtitle
+    from cleanit import Config, Subtitle
 
-    subtitle = Subtitle('/subtitle/path')
-    config = Config.from_file('/config/path')
-    if clean_subtitle(subtitle, config.rules):
-        save_subtitle(subtitle)
+    sub = Subtitle('/subtitle/path/subtitle.en.srt')
+    cfg = Config.from_path('/config/path')
+    rules = cfg.select_rules(tags={'ocr'})
+    if sub.clean(rules):
+        sub.save()
+
 
 YAML Configuration file
 ^^^^^^^^^^^^^^^^^^^^^^^
-The yaml configuration file has 2 main sections: *templates* and *groups*.
-
-- **Templates** can help you to define common configuration snippets to be used in several groups.
-- **Groups**: where you can define your rules.
 
 .. code:: yaml
-
- # Reference:
- #   type: [text*, regex]
- #   match: [contains*, exact, startswith, endswith]
- #   flags: [ignorecase, dotall, multiline, locale, unicode, verbose]
- #   whitelist: no* 
- #   rules:
- #   - sometext
- #   - (\b)(\d{1,2})x(\d{1,2})(\b): {replacement: \1S\2E\3\4, type: regex, match: contains, flags: [unicode], whitelist: no}
- 
- 
- templates:
-   common:
-     type: text
-     match: contains
- 
- groups:
-   # Groups can have any name, in this case 'blacklist' we have all the rules to remove subtitle  entries
-   blacklist:
-     template: common
-     rules:
-       # Removes any subtitle entry that contains the word FooBar
-       - FooBar
- 
-       # Removes any subtitle entry that contains the pattern S00E00
-       # Example:
-       #   My Series S01E02
-       - \bs\d{2}\s?e\d{2}\b: {type: regex, flags: ignorecase}
- 
-       # Removes any subtitle entry that is exactly the word: 'Ah' or 'Oh' (with 1 or more h)
-       # Example:
-       #   Ohhh!
-       - ((Ah+)|(Oh+))\W?: {match: exact}
- 
-   # The group 'tidy' has all rules to replace certain patterns in your subtitles.
-   tidy:
-     template: common
-     type: regex
-     rules:
-       # Description: Replace extra spaces to a single space
-       # Example:
-       #   Foo     bar.
-       # to
-       #   Foo bar.
-       - \s{2,}: ' '
- 
-       # Description: Add space when starting phrase with '-'. It ignores tags, such as <i>, <b>
-       # Example:
-       #   <i>-Francine, what has happened?
-       #   -What has happened? You tell me!</i>
-       # to
-       #   <i>- Francine, what has happened?
-       #   - What has happened? You tell me!</i>
-       - '(?:^(|(?:\<\w\>)))-([''"]?\w+)': { replacement: '\1- \2', flags: [multiline, unicode] }
-
-\* The default value if none is defined
-
-
-
-CleanIt will try to load configuration file from ~/.config/cleanit/config.yml if no configuration file is defined.
+templates:
+  - &ocr
+    tags:
+      - ocr
+      - minimal
+      - default
+    priority: 10000
+    languages: en
+rules:
+  replace-l-to-I-character[ocr:en]:
+    <<: *ocr
+    patterns: '\bl\b'
+    replacement: 'I'
+    examples:
+      ? |
+        And if l refuse?
+      : |
+        And if I refuse?

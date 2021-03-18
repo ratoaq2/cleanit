@@ -1,88 +1,107 @@
 # -*- coding: utf-8 -*-
+from typing import List
 
-rule_type = {'type': 'string', 'enum': ['text', 'regex']}
-match_type = {'type': 'string', 'enum': ['exact', 'contains', 'startswith', 'endswith']}
-whitelist = {'type': 'boolean'}
-flag = {'type': 'string', 'enum': ['ignorecase', 'dotall', 'multiline', 'locale', 'unicode', 'verbose']}
-flags = {'oneOf': [flag, {'type': 'array', 'items': flag}]}
-replacement_type = {'type': 'string'}
 
-rule_tuple_string_string = {
-    'type': 'object',
-    'patternProperties': {
-        '.+': {'type': 'string'}
-    },
-    'minProperties': 1,
-    'maxProperties': 1
-}
-rule_tuple_string_dict = {
-    'type': 'object',
-    'patternProperties': {
-        '.+': {
-            'type': 'object',
-            'properties': {
-                'replacement': replacement_type,
-                'type': rule_type,
-                'match': match_type,
-                'flags': flags,
-                'whitelist': whitelist
-            },
-            'additionalProperties': False
-        }
-    },
-    'minProperties': 1,
-    'maxProperties': 1
-}
+def string_enum(values: List[str]):
+    return {'type': 'string', 'enum': values}
 
-rule = {'anyOf': [{'type': 'string'}, rule_tuple_string_string, rule_tuple_string_dict]}
-rules = {'type': 'array', 'items': rule, 'minItems': 1, 'uniqueItems': True}
 
-group = {
-    'type': 'object',
-    'properties': {
-        'template': {'type': 'string'},
-        'type': rule_type,
-        'match': match_type,
-        'flags': flags,
-        'whitelist': whitelist,
-        'rules': rules
-    },
-    'required': ['rules'],
-    'additionalProperties': False
-}
+def array(schema: dict, min_items=0):
+    return {'type': 'array', 'items': schema, 'minItems': min_items}
 
-groups = {
-    'type': 'object',
-    'patternProperties': {
-        '.+': group
-    },
-    'minProperties': 1
-}
 
-template = {
-    'type': 'object',
-    'properties': {
-        'type': rule_type,
-        'match': match_type,
-        'flags': flags,
-        'replacement': replacement_type,
-        'whitelist': whitelist
-    },
-    'additionalProperties': False
-}
-templates = {
-    'type': 'object',
-    'patternProperties': {
-        '.+': template
-    },
-    'minProperties': 1
-}
+def one_of(*schemas: dict):
+    return {'oneOf': list(schemas)}
 
-root = {
-    'type': 'object',
-    'properties': {
-        'templates': templates,
-        'groups': groups
-    },
-    'additionalProperties': False
-}
+
+def one_or_array(schema: dict):
+    return one_of(schema, array(schema, min_items=1))
+
+
+class TagsSchema:
+    schema = {'type': 'string'}
+
+
+class RuleTypeSchema:
+    schema = string_enum(['text', 'regex'])
+
+
+class MatchTypeSchema:
+    schema = string_enum(['exact', 'contains', 'startswith', 'endswith'])
+
+
+class FlagSchema:
+    schema = string_enum(['ignorecase', 'dotall', 'multiline', 'locale', 'unicode', 'verbose'])
+
+
+class ReplacementSchema:
+    schema = {'type': 'string'}
+
+
+class PrioritySchema:
+    schema = {'type': 'integer'}
+
+
+class LanguageSchema:
+    schema = {'type': 'string'}
+
+
+class AliasesSchema:
+    schema = {
+        'type': 'object',
+        'patternProperties': {
+            '.+': {'type': 'string'}
+        },
+        'minProperties': 1
+    }
+
+
+class ExampleSchema:
+    schema = one_of(array({'type': 'string'}, min_items=1),
+                    {'type': 'object',
+                     'patternProperties': {
+                         '.+': {'type': ['string', 'null']}
+                     },
+                     'minProperties': 1
+                     })
+
+
+class RuleSchema:
+    schema = {
+        'type': 'object',
+        'properties': {
+            'type': RuleTypeSchema.schema,
+            'match': MatchTypeSchema.schema,
+            'flags': one_or_array(FlagSchema.schema),
+            'tags': one_or_array(TagsSchema.schema),
+            'priority': PrioritySchema.schema,
+            'languages': one_or_array(LanguageSchema.schema),
+            'patterns': one_or_array({'type': 'string'}),
+            'disabled': {'type': ['boolean', 'null']},
+            'replacement': ReplacementSchema.schema,
+            'examples': ExampleSchema.schema
+        },
+        'additionalProperties': False
+    }
+
+
+class RulesSchema:
+    schema = {
+        'type': 'object',
+        'patternProperties': {
+            '.+': RuleSchema.schema
+        },
+        'minProperties': 1
+    }
+
+
+class RootSchema:
+    schema = {
+        'type': 'object',
+        'properties': {
+            'aliases': AliasesSchema.schema,
+            'templates': array(RuleSchema.schema, min_items=0),
+            'rules': RulesSchema.schema
+        },
+        'additionalProperties': False
+    }

@@ -1,0 +1,27 @@
+1
+00:00:00,007 --> 00:00:00,008
+<i>-<b>Francine</b>, what happened?
+-I don't know. You should tell me!</i>
+
+2
+00:01:51,695 --> 00:01:53,436
+<i>♪ That old black magic ♪</i>
+
+3
+00:01:53,530 --> 00:01:56,022
+<i>♪ That you, uh, weave so well ♪</i>
+
+4
+00:01:56,116 --> 00:01:58,574
+<i>- ♪ Those icy fingers ♪</i>
+- Cigars? Cigarettes?
+
+5
+00:04:15,440 --> 00:04:21,740
+<i>'Ben'</i>
+
+6
+00:05:05,473 --> 00:05:07,593
+<i>In the wake of this afternoon's
+widespread blackout..</i>
+

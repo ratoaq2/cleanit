@@ -1,0 +1,55 @@
+templates:
+  - &ocr
+    tags:
+      - ocr
+      - minimal
+      - default
+    priority: 10000
+
+rules:
+  replace-smart-single-quote-to-single-quote[ocr]:
+    <<: *ocr
+    patterns: '[‘’]'
+    replacement: "'"
+    examples:
+      ? |
+        ‘Senator’, we're making
+        our ‘final’ approach into ‘Coruscant’.
+      : |
+        'Senator', we're making
+        our 'final' approach into 'Coruscant'.
+  replace-smart-double-quote-to-double-quote[ocr]:
+    <<: *ocr
+    patterns: '[“”]'
+    replacement: '"'
+    examples:
+      ? |
+        “Senator”, we're making
+        our “final” approach into “Coruscant”.
+      : |
+        "Senator", we're making
+        our "final" approach into "Coruscant".
+  replace-double-single-quotes-to-double-quote[ocr]:
+    <<: *ocr
+    patterns: "'{2}"
+    replacement: '"'
+    examples:
+      ? |
+        ''Senator'', ''we'''re making
+        our ''final'' approach into ''Coruscant''.
+      : |
+        "Senator", "we"'re making
+        our "final" approach into "Coruscant".
+  replace-|-to-I-character[ocr]:
+    <<: *ocr
+    patterns: '^(?P<x>-\s*)\|(?P<y>.*)$'
+    replacement: '\g<x>I\g<y>'
+    examples:
+        ? |
+          - |t.
+        : |
+          - It.
+        ? |
+          - |sso.
+        : |
+          - Isso.

@@ -1,0 +1,43 @@
+templates:
+  - &ocr
+    tags:
+      - ocr
+      - minimal
+      - default
+    priority: 10000
+    languages: en
+
+rules:
+  replace-|/-to-I-character[ocr:en]:
+    <<: *ocr
+    patterns: '(?P<x>\s|^)(\/|\|)(?P<y>t?\W|$)'
+    replacement: '\g<x>I\g<y>'
+    examples:
+      ? |
+        now / only ask,
+        | can only ask. So do /
+      : |
+        now I only ask,
+        I can only ask. So do I
+      ? |
+        /t shouldn't be you. |t should be me.
+      : |
+        It shouldn't be you. It should be me.
+  replace-1-to-I-character[ocr:en]:
+    <<: *ocr
+    patterns: '1(?P<x>\s(?:ha(?:d|ve)n?|d(?:o|id)n?|won|will|can|(?:sh|w|c)ouldn?)\b)'
+    replacement: 'I\g<x>'
+    examples:
+      ? |
+        1 haven't done that.
+      : |
+        I haven't done that.
+  replace-l-to-I-character[ocr:en]:
+    <<: *ocr
+    patterns: '\bl\b'
+    replacement: 'I'
+    examples:
+      ? |
+        And if l refuse?
+      : |
+        And if I refuse?

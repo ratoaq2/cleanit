@@ -1,0 +1,112 @@
+templates:
+  - &no-style
+    tags: no-style
+    priority: 9900
+
+rules:
+  drop-style-tags[no-style]:
+    <<: *no-style
+    patterns: '(?P<x>.*?)(?:<[^>]*?>)|(?:{[^}]*?})(?P<y>.*?)'
+    flags: multiline
+    replacement: '\g<x>\g<y>'
+    examples:
+      ? |
+        <i>-<b>Francine</b>, o que houve?
+        -O que aconteceu? Diga-me!</i>
+      : |
+        -Francine, o que houve?
+        -O que aconteceu? Diga-me!
+      ? |
+        This should be an E with an accent: È
+        日本語
+        <font size=30><b><i><u>This text should be bold, italics and underline</u></i></b></font>
+        <font size=9 color="00ff00">This text should be small and green</font>
+        <font color=#ff0000 size=9>This text should be small and red</font>
+        <font color=brown size=24>This text should be big and brown</font>
+      : |
+        This should be an E with an accent: È
+        日本語
+        This text should be bold, italics and underline
+        This text should be small and green
+        This text should be small and red
+        This text should be big and brown
+      ? |
+        Implementation is the same of the ASS tag
+        {\an8}This text should be at the
+        top and horizontally centered
+      : |
+        Implementation is the same of the ASS tag
+        This text should be at the
+        top and horizontally centered
+      ? |
+        This text should be at the
+        top and horizontally at the left{\an7}
+      : |
+        This text should be at the
+        top and horizontally at the left
+      ? |
+        {\an4}This text should be at the
+        middle and horiz{\an6}ontally at the left
+        (The second position must be ignored)
+      : |
+        This text should be at the
+        middle and horizontally at the left
+        (The second position must be ignored)
+      ? |
+        Hide these tags:{\some_letters_or_numbers_or_chars}
+        also hide these tags:{Y:some_letters_or_numbers_or_chars}
+        but show this:{normal text}
+      : |
+        Hide these tags:
+        also hide these tags:
+        but show this:
+      ? |
+        <font color="#00FF00" size="6">This could be the <font size="35">m<font color="#000000">o</font>st</font> difficult thing to implement</font>
+      : |
+        This could be the most difficult thing to implement
+      ? |
+        >
+        It would be a good thing to
+        <invalid_tag>hide invalid html tags that are closed and show the text in them</invalid_tag>
+        <invalid_tag_unclosed>but show un-closed invalid html tags
+        Show not opened tags</invalid_tag_not_opened>
+        <
+      : |
+        >
+        It would be a good thing to
+        hide invalid html tags that are closed and show the text in them
+        but show un-closed invalid html tags
+        Show not opened tags
+        <
+      ? |
+        <b>This line should be bold</b>
+        <i>This line should be italics</i>
+        <u>This line should be underline</u>
+        <s>This line should be strikethrough</s>
+        <u>Both lines
+        should be underline</u>
+      : |
+        This line should be bold
+        This line should be italics
+        This line should be underline
+        This line should be strikethrough
+        Both lines
+        should be underline
+      ? |
+        <s>Both line should be strikethrough,
+        yes.</s>
+        <wwww>Correctly closed tags
+        should be hidden.</wwww>
+      : |
+        Both line should be strikethrough,
+        yes.
+        Correctly closed tags
+        should be hidden.
+      ? |
+        <s>Three lines should be strikethrough,
+        yes.
+        <yyyy>Not closed tags showed as text
+      : |
+        Three lines should be strikethrough,
+        yes.
+        Not closed tags showed as text

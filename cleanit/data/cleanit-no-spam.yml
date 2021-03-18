@@ -1,0 +1,25 @@
+templates:
+  - &no-spam-text-contains-ignorecase
+    type: text
+    flags: ignorecase
+    tags:
+      - no-spam
+      - default
+    priority: 1000
+
+rules:
+  drop-ads-and-credits[no-spam]:
+    <<: *no-spam-text-contains-ignorecase
+    patterns:
+      - 'opensubtitles'
+      - 'isubdb'
+    examples:
+      - 'contact www.OpenSubtitles.org today'
+      - 'to remove all ads from www.OpenSubtitles.org'
+      - 'wodurch sämtliche Werbung von www.OpenSubtitles.org entfernt wird'
+      - 'Kontaktiere noch heute www.OpenSubtitles.org'
+      - 'fale com www.OpenSubtitles.org hoje'
+      - 'remova todos os anúncios do www.OpenSubtitles.org'
+      - |
+        iSubDB.com - fast, modern, simple
+        Subtitles search by drag & drop
