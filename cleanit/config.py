@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 import os
 import re
-from typing import List, Collection, Iterable
+from typing import List, Collection
 
 import logging
-from jsonschema import ValidationError
 
 from . import __title__, __author__
+from .data import default_config_resources
 from .rule import Rule, Rules
-from .utils import load_config_file, merge_options
+from .utils import load_config_file, merge_options, load_config_resource
 
 from appdirs import AppDirs
 from babelfish import Language
@@ -21,7 +21,7 @@ FILENAME_RE = re.compile(r'^cleanit(-[\w-]+)?(\.\w+(-\w+){0,2})?.(ya?ml|json)$')
 
 def get_default_config_files():
     dirs = AppDirs(appname=__title__, appauthor=__author__)
-    folders = [os.path.join(here, 'data'), dirs.site_config_dir, dirs.user_config_dir]
+    folders = [dirs.site_config_dir, dirs.user_config_dir]
 
     locations = []
     for folder in folders:
@@ -42,7 +42,16 @@ def load_configuration(*locations: str):
     return configurations
 
 
-default_config = merge_options(*load_configuration(*get_default_config_files()))
+def load_default_resources():
+    configurations = []
+    for resource in default_config_resources:
+        data = load_config_resource(f'data/{resource}')
+        configurations.append(data)
+        logger.debug(f'Loaded configuration from {resource}')
+    return configurations
+
+
+default_config = merge_options(*(load_default_resources() + load_configuration(*get_default_config_files())))
 
 
 class Config:

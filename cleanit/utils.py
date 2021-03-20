@@ -1,5 +1,6 @@
 import copy
 import json
+import pkgutil
 from types import GeneratorType
 from typing import Any, Set
 
@@ -42,6 +43,13 @@ def validate(data: dict):
 def load_config_file(path: str):
     with open(path, 'r') as f:
         data = json.load(f) if path.endswith('.json') else yaml.safe_load(f.read())
+    validate(data)
+    return data
+
+
+def load_config_resource(resource_name: str):
+    resource_data = pkgutil.get_data('cleanit', resource_name)
+    data = json.loads(resource_data) if resource_name.endswith('.json') else yaml.safe_load(resource_data)
     validate(data)
     return data
 

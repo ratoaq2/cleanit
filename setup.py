@@ -7,6 +7,15 @@ import re
 from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
+data_path = os.path.join(here, 'cleanit', 'data')
+
+locations = [location for location in os.listdir(data_path) if location.endswith(('.yml', '.yaml', '.json'))]
+with open(os.path.join(data_path, '__init__.py'), 'w') as f:
+    f.write('# -*- coding: utf-8 -*-\n\n')
+    f.write('default_config_resources = [\n')
+    for location in locations:
+        f.write(f"    '{location}',\n")
+    f.write(']\n')
 
 
 def read(*parts):

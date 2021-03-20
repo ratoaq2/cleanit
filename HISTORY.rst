@@ -1,5 +1,10 @@
 Changelog
 ---------
+0.4.2
+^^^^^
+**release date:** 2021-03-20
+* Fixes default configuration loading
+
 0.4.1
 ^^^^^
 **release date:** 2021-03-16
