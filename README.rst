@@ -16,7 +16,7 @@ Subtitles extremely clean.
 
 :Project page: https://github.com/ratoaq2/cleanit
 
-**CleanIt** is a command line tool (written in python) that helps you to keep your subtitles clean.
+**CleanIt** is a command line tool that helps you to keep your subtitles clean.
 You can specify your own rules to detect entries to be removed or patterns to be replaced.
 Simple text matching or complex regex can be used.
 It comes with standard rules out of the box:
@@ -68,6 +68,14 @@ Clean subtitles::
     423 subtitles collected / 107 subtitles filtered out / 0 path ignored
     Cleaning subtitles  [####################################]  100%
     268 subtitles saved / 155 subtitles unchanged
+
+
+Using docker::
+
+    $ docker run -it --rm -v /medias:/medias -u $(id -u username):$(id -g username) ratoaq2/cleanit -t default /medias
+    1072 subtitles collected / 0 subtitle filtered out / 0 path ignored
+    Cleaning subtitles  [####################################]  100%
+    980 subtitle saved / 92 subtitles unchanged
 
 
 API
