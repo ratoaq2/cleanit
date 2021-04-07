@@ -49,7 +49,8 @@ rules:
       - '     '
   drop-starting-dash-for-single-lines[tidy]:
     <<: *tidy
-    patterns: '^\-\s*(?P<x>[^\n\r]*|(.*[\n\r][^-].*))$'
+    patterns: '^\-\s*(?P<x>[^\n\r]*|(?:[^\n\r]*[\n\r][^-][^\n\r]*)+)$'
+    flags: dotall
     replacement: '\g<x>'
     examples:
       ? |
@@ -68,3 +69,25 @@ rules:
       : |
         Oh, if you were my girl,
         I wouldn't leave you alone.
+      ? |
+        - Oh, if you were my girl,
+        I wouldn't leave you alone.
+        And you shouldn't leave me alone.
+      : |
+        Oh, if you were my girl,
+        I wouldn't leave you alone.
+        And you shouldn't leave me alone.
+      ? |
+        - Oh, if you were my girl,
+        - I wouldn't leave you alone.
+      : |
+        - Oh, if you were my girl,
+        - I wouldn't leave you alone.
+      ? |
+        - Oh, if you were my girl,
+        - I wouldn't leave you alone.
+        And you shouldn't leave me alone.
+      : |
+        - Oh, if you were my girl,
+        - I wouldn't leave you alone.
+        And you shouldn't leave me alone.

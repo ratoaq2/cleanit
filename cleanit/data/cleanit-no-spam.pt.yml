@@ -12,8 +12,20 @@ rules:
   drop-ads-and-credits[no-spam:pt]:
     <<: *no-spam-text-contains-ignorecase
     patterns:
-      - 'legendas.tv'
       - 'tradutora: '
+      - 'legendas:'
+      - 'sua melhor aposta em legendas'
+      - 'tradução e legendas'
+      - 'legendas e sincronização'
+      - 'sincronia das legendas'
+      - 'download de legendas'
+      - 'legendas.com'
     examples:
-      - '<b>www.legendas.tv</b>'
       - 'Tradutora: FooBar'
+      - 'Legendas: FooBar'
+      - 'Sua melhor aposta em legendas!'
+      - 'Tradução e Legendas'
+      - 'Legendas e Sincronização'
+      - '<b>Sincronia das Legendas</b>'
+      - '<b>Download de Legendas'
+      - 'www.abclegendas.com'

@@ -6,14 +6,12 @@ templates:
       - no-spam
       - default
     priority: 1000
-    languages: en
+    languages: de
 
 rules:
-  drop-ads-and-credits[no-spam:en]:
+  drop-ads-and-credits[no-spam:de]:
     <<: *no-spam-text-contains-ignorecase
     patterns:
-      - 'subtitles by '
-      - 'subs by'
+      - 'untertitelung:'
     examples:
-      - 'Subtitles by FooBar'
-      - 'Subs by FooBar'
+      - 'Untertitelung: SUBS FooBar'
