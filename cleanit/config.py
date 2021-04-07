@@ -26,8 +26,9 @@ def get_default_config_files():
     locations = []
     for folder in folders:
         try:
-            locations.extend([os.path.abspath(os.path.join(folder, f)) for f in os.listdir(folder) if FILENAME_RE.search(f)])
-        except FileNotFoundError as e:
+            locations.extend([os.path.abspath(os.path.join(folder, f)) for f in os.listdir(folder)
+                              if FILENAME_RE.search(f)])
+        except (FileNotFoundError, PermissionError) as e:
             logger.debug(f"Discarding location '{folder}'. {str(e)}")
 
     return locations
