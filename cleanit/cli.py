@@ -128,7 +128,8 @@ def clean_subtitle(sub: Subtitle, rules: Rules, encoding: Optional[str], force: 
 
         return False
     except Exception as e:
-        logger.warning(f'Error while trying to clean {sub.name}: <{type(e).__name__}> [{e}]')
+        logger.warning(f'Error while trying to clean {sub.name}: <{type(e).__name__}> [{e}]',
+                       exc_info=logger.isEnabledFor(logging.DEBUG))
     finally:
         # to free up memory
         sub.finalize()
