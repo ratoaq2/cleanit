@@ -12,7 +12,9 @@ rules:
   drop-ads-and-credits[no-spam:pt]:
     <<: *no-spam-text-contains-ignorecase
     patterns:
-      - 'tradutora: '
+      - 'tradutora:'
+      - 'tradutor:'
+      - 'tradução:'
       - 'legendas:'
       - 'sua melhor aposta em legendas'
       - 'tradução e legendas'
@@ -20,8 +22,11 @@ rules:
       - 'sincronia das legendas'
       - 'download de legendas'
       - 'legendas.com'
+      - 'portuguese - br'
     examples:
       - 'Tradutora: FooBar'
+      - 'Tradutor: FooBar'
+      - 'Tradução: Foobar'
       - 'Legendas: FooBar'
       - 'Sua melhor aposta em legendas!'
       - 'Tradução e Legendas'
@@ -29,3 +34,4 @@ rules:
       - '<b>Sincronia das Legendas</b>'
       - '<b>Download de Legendas'
       - 'www.abclegendas.com'
+      - 'Portuguese - BR'
