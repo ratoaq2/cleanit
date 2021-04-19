@@ -91,3 +91,32 @@ rules:
         - Oh, if you were my girl,
         - I wouldn't leave you alone.
         And you shouldn't leave me alone.
+  replace----with-...[tidy]:
+    <<: *tidy
+    patterns: '(?P<x>\w)\-{2}$'
+    flags: multiline
+    replacement: '\g<x>...'
+    examples:
+      ? |
+        - No. Rachel, I know you're his friend, but--
+        - Harvey, trust me.
+      : |
+        - No. Rachel, I know you're his friend, but...
+        - Harvey, trust me.
+  replace-..-with-...[tidy]:
+    <<: *tidy
+    patterns: '(?<!\.)\.{2}(?!\.)'
+    replacement: '...'
+    examples:
+      ? |
+        ...is the first
+        in decades.
+      : |
+        ...is the first
+        in decades.
+      ? |
+        ..is the first
+        in decades.
+      : |
+        ...is the first
+        in decades.

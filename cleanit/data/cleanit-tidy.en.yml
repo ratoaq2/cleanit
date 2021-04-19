@@ -10,7 +10,7 @@ templates:
 rules:
   drop-interjections-single-lines[tidy:en]:
     <<: *tidy
-    patterns: '^((He+y+)|(Aa*h+)|(Oo*h+)|(Hu*m+))\W*$'
+    patterns: '^((He+y+)|(Aa*h+)|(Oo*h+)|(Hu*m+)|(Sh+))\W*$'
     examples:
       - 'Ah?!?'
       - 'Aahh?!?'
@@ -22,3 +22,4 @@ rules:
       - 'Huuummm'
       - 'Hey!!'
       - 'Heeyyy!!'
+      - 'Shh.'

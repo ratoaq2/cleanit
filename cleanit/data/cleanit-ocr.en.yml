@@ -10,7 +10,7 @@ templates:
 rules:
   replace-|/-to-I-character[ocr:en]:
     <<: *ocr
-    patterns: '(?P<x>\s|^)(\/|\|)(?P<y>t?\W|$)'
+    patterns: '(?P<x>\s|"|^)(\/|\|)(?P<y>t?\W|$)'
     replacement: '\g<x>I\g<y>'
     examples:
       ? |
@@ -23,6 +23,12 @@ rules:
         /t shouldn't be you. |t should be me.
       : |
         It shouldn't be you. It should be me.
+      ? |
+        We all know how much you like to say
+        "| told you so."
+      : |
+        We all know how much you like to say
+        "I told you so."
   replace-1-to-I-character[ocr:en]:
     <<: *ocr
     patterns: '1(?P<x>\s(?:ha(?:d|ve)n?|d(?:o|id)n?|won|will|can|(?:sh|w|c)ouldn?)\b)'
@@ -32,6 +38,17 @@ rules:
         1 haven't done that.
       : |
         I haven't done that.
+  replace-1-to-I-character-02[ocr:en]:
+    <<: *ocr
+    patterns: '(?P<x>\-\s+)1\b'
+    replacement: '\g<x>I'
+    examples:
+      ? |
+        - 1 know it.
+        - Why you know that?
+      : |
+        - I know it.
+        - Why you know that?
   replace-l-to-I-character[ocr:en]:
     <<: *ocr
     patterns: '\bl\b'
@@ -41,3 +58,12 @@ rules:
         And if l refuse?
       : |
         And if I refuse?
+  replace-[I-to-I-character[ocr:en]:
+    <<: *ocr
+    patterns: '\[I\b'
+    replacement: 'I'
+    examples:
+      ? |
+        [I've
+      : |
+        I've
