@@ -5,8 +5,7 @@ Subtitles extremely clean.
 [![Latest
 Version](https://img.shields.io/pypi/v/cleanit.svg)](https://pypi.python.org/pypi/cleanit)
 
-[![Travis CI build
-status](https://travis-ci.org/ratoaq2/cleanit.svg?branch=master)](https://travis-ci.org/ratoaq2/cleanit)
+[![tests](https://github.com/ratoaq2/cleanit/actions/workflows/test.yml/badge.svg)](https://github.com/ratoaq2/cleanit/actions/workflows/test.yml)
 
 [![License](https://img.shields.io/github/license/ratoaq2/cleanit.svg)](https://github.com/ratoaq2/cleanit/blob/master/LICENSE)
 
