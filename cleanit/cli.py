@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+from datetime import timedelta, datetime
 from typing import List, Tuple, Set, Optional
 
 import click
 import logging
 import os
+import re
 
 from babelfish import Error as BabelfishError, Language
 
@@ -25,7 +27,19 @@ class LanguageParamType(click.ParamType):
             self.fail(f"{click.style(f'{value}', bold=True)} is not a valid language")
 
 
+class AgeParamType(click.ParamType):
+    name = 'age'
+
+    def convert(self, value, param, ctx):
+        match = re.match(r'^(?:(?P<weeks>\d+?)w)?(?:(?P<days>\d+?)d)?(?:(?P<hours>\d+?)h)?$', value)
+        if not match:
+            self.fail('%s is not a valid age' % value)
+
+        return timedelta(**{k: int(v) for k, v in match.groupdict('0').items()})
+
+
 LANGUAGE = LanguageParamType()
+AGE = AgeParamType()
 
 
 @click.command()
@@ -34,6 +48,7 @@ LANGUAGE = LanguageParamType()
               'e.g. en, pt-BR (can be used multiple times).')
 @click.option('-t', '--tag', required=True, multiple=True, help='Rule tags to be used, '
               'e.g. ocr, tidy, no-sdh, no-style, no-lyrics, no-spam (can be used multiple times). ')
+@click.option('-a', '--age', type=AGE, help='Filter out subtitles older than AGE, e.g. 12h, 1w2d.')
 @click.option('-e', '--encoding', help='Save subtitles using the following encoding.')
 @click.option('-f', '--force', is_flag=True, default=False,
               help='Force saving the subtitle even if there was no change.')
@@ -42,7 +57,7 @@ LANGUAGE = LanguageParamType()
 @click.option('-v', '--verbose', count=True, help='Display debug messages')
 @click.argument('path', type=click.Path(), required=True, nargs=-1)
 def cleanit(config: Optional[str], language: Optional[Tuple[Language]], tag: Tuple[str],
-            encoding: Optional[str],
+            age: Optional[timedelta], encoding: Optional[str],
             force: bool, test: bool, debug: bool, verbose: int, path: Tuple[str]):
     if debug:
         handler = logging.StreamHandler()
@@ -71,11 +86,11 @@ def cleanit(config: Optional[str], language: Optional[Tuple[Language]], tag: Tup
 
     if debug or verbose > 1:
         for p in path:
-            scan(p, languages, collected_subtitles, filtered_out_paths, discarded_paths)
+            scan(p, languages, collected_subtitles, filtered_out_paths, discarded_paths, age)
     else:
         with click.progressbar(path, label='Collecting subtitles', item_show_func=lambda item: item or '') as bar:
             for p in bar:
-                scan(p, languages, collected_subtitles, filtered_out_paths, discarded_paths)
+                scan(p, languages, collected_subtitles, filtered_out_paths, discarded_paths, age)
 
     if debug or verbose > 1:
         if verbose > 2:
@@ -135,14 +150,21 @@ def clean_subtitle(sub: Subtitle, rules: Rules, encoding: Optional[str], force: 
         sub.finalize()
 
 
-def scan(path: str, languages: Set[Language], collected: List[Subtitle], filtered_out: List[str], discarded: List[str]):
+def scan(path: str,
+         languages: Set[Language],
+         collected: List[Subtitle],
+         filtered_out: List[str],
+         discarded: List[str],
+         age: Optional[timedelta]):
     if not os.path.exists(path):
         discarded.append(path)
 
     elif os.path.isfile(path):
         if path.lower().endswith('.srt'):
             subtitle = Subtitle(path)
-            if subtitle.match(languages):
+            if subtitle.match(languages) and (
+                    not age
+                    or age > datetime.utcnow() - datetime.utcfromtimestamp(os.path.getmtime(path))):
                 collected.append(subtitle)
             else:
                 filtered_out.append(path)
@@ -151,4 +173,4 @@ def scan(path: str, languages: Set[Language], collected: List[Subtitle], filtere
         for dir_path, dir_names, file_names in os.walk(path):
             for filename in file_names:
                 file_path = os.path.join(dir_path, filename)
-                scan(file_path, languages, collected, filtered_out, discarded)
+                scan(file_path, languages, collected, filtered_out, discarded, age)
