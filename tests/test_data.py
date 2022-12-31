@@ -39,7 +39,7 @@ def generate_params():
 def test_data_files(rules: Rules, input_file, expected_file):
     # given
     subtitle = Subtitle(input_file)
-    with open(expected_file, 'r') as f:
+    with open(expected_file, 'r', encoding='utf8') as f:
         expected_text = f.read().strip()
     # when
     subtitle.clean(rules)

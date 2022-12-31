@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import os
 import logging
 import re
 from collections import UserList

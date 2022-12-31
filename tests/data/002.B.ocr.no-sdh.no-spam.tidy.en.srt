@@ -23,5 +23,5 @@
 6
 00:05:05,473 --> 00:05:07,593
 <i>In the wake of this afternoon's
-widespread blackout..</i>
+widespread blackout...</i>
 

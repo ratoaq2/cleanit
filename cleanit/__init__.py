@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
-__title__ = 'cleanit'
-__author__ = 'Rato'
-__version__ = '0.4.5-dev'
+from importlib import metadata
 
-from .config import Config
-from .subtitle import Subtitle
+__title__ = metadata.metadata(__package__)['name']
+__author__ = metadata.metadata(__package__)['author']
+__version__ = metadata.version(__package__)
+
+del metadata
+
+from .config import Config  # noqa: F401,E402
+from .subtitle import Subtitle  # noqa: F401,E402

@@ -65,7 +65,7 @@ class Subtitle:
     def content(self):
         if self.subtitle:
             writer = StringIO()
-            self.subtitle.write_into(writer)
+            self.subtitle.write_into(writer, eol='\n')
             writer.seek(0)
             return writer.read().strip()
 
