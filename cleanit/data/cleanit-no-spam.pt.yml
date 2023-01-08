@@ -7,6 +7,16 @@ templates:
       - default
     priority: 1000
     languages: pt
+  - &no-spam-regex-multiline-ignorecase
+    type: regex
+    flags:
+      - ignorecase
+      - multiline
+    tags:
+      - no-spam
+      - default
+    priority: 1000
+    languages: pt
 
 rules:
   drop-ads-and-credits[no-spam:pt]:
@@ -16,6 +26,7 @@ rules:
       - 'tradutor:'
       - 'tradução:'
       - 'legendas:'
+      - 'legenda:'
       - 'sua melhor aposta em legendas'
       - 'tradução e legendas'
       - 'legendas e sincronização'
@@ -23,6 +34,13 @@ rules:
       - 'download de legendas'
       - 'legendas.com'
       - 'portuguese - br'
+      - 'legende conosco'
+      - 'avalie esta legenda'
+      - '- legenda'
+      - 'legenda em'
+      - 'legenda por'
+      - 'legenda original'
+      - 'ajude-nos e torne-se membro'
     examples:
       - 'Tradutora: FooBar'
       - 'Tradutor: FooBar'
@@ -35,3 +53,34 @@ rules:
       - '<b>Download de Legendas'
       - 'www.abclegendas.com'
       - 'Portuguese - BR'
+      - 'Legenda em português: Foobar'
+      - 'Legenda original: foobar'
+      - 'Legenda por: foobar'
+      - |
+        <i>Legende conosco!
+        foo@bar.com</i>
+      - |
+        Por favor, avalie esta legenda em www.foo.bar/abcd
+        Ajude outros usuários a escolher as melhores legendas.
+      - |
+        <font color="#f1fc27"><b>- Legenda -
+        Foo + bar</b></font>
+      - |
+        Ajude-nos e torne-se membro VIP
+        para remover todos os anúncios do % url%
+      - |
+        <b>Legenda:
+        Foo | Bar</b>
+
+  drop-ads-and-credits-regex-exact[no-spam:pt]:
+    <<: *no-spam-regex-multiline-ignorecase
+    patterns:
+      - '^legenda$'
+      - '^<.+>legenda$'
+    examples:
+      - |
+        Legenda
+        - FooBar -
+      - |
+        <font color=#FFFF00><b>Legenda
+        - Foobar -</b></font>

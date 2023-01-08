@@ -30,6 +30,7 @@ rules:
       - 'legendastv'
       - 'legendas tv'
       - 'subsland'
+      - 'subpack'
     examples:
       - 'contact www.OpenSubtitles.org today'
       - 'to remove all ads from www.OpenSubtitles.org'
@@ -58,3 +59,6 @@ rules:
       - |
         iSubDB.com - fast, modern, simple
         Subtitles search by drag & drop
+      - |
+        Legenda Subpack por:
+        FOOBAR
