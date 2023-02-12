@@ -81,3 +81,29 @@ rules:
       Mocês: Vocês
       MOCÊ: VOCÊ
       MOCÊS: VOCÊS
+  replace-papal-to-papai[ocr:pt]:
+    <<: *ocr
+    patterns:
+      - '\b(?P<x>[Pp]apa)(?P<y>l)\b'
+      - '\b(?P<x>[Pp]a)(?P<y>l)\b'
+    replacement: '\g<x>i'
+    examples:
+      Papal: Papai
+      papal: papai
+      Pal: Pai
+      pal: pai
+  replace-calu-to-caiu[ocr:pt]:
+    <<: *ocr
+    patterns:
+      - '\bcalu\b'
+    replacement: 'caiu'
+    examples:
+      calu: caiu
+  replace-rel-to-rei[ocr:pt]:
+    <<: *ocr
+    patterns:
+      - '\b(?P<x>[Rr]e)(?P<y>l)\b'
+    replacement: '\g<x>i'
+    examples:
+      rel: rei
+      Rel: Rei

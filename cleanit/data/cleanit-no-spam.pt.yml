@@ -41,6 +41,9 @@ rules:
       - 'legenda por'
       - 'legenda original'
       - 'ajude-nos e torne-se membro'
+      - 'legendas traduzidas'
+      - 'revisão e sincronismo'
+      - 'revisão:'
     examples:
       - 'Tradutora: FooBar'
       - 'Tradutor: FooBar'
@@ -71,6 +74,15 @@ rules:
       - |
         <b>Legenda:
         Foo | Bar</b>
+      - |
+        Legendas traduzidas por:
+        Foo bar
+      - |
+        Revisão e sincronismo
+        <font color="#ffff00">>>>>foobar<<<<<</font>
+      - |
+        <font color="#ffff00"><b>Revisão:
+        foobar</b></font>
 
   drop-ads-and-credits-regex-exact[no-spam:pt]:
     <<: *no-spam-regex-multiline-ignorecase

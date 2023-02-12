@@ -67,3 +67,13 @@ rules:
         [I've
       : |
         I've
+  replace-I'I-to-I'll[ocr:en]:
+    <<: *ocr
+    patterns:
+      - '\bI''I\b'
+    replacement: 'I''ll'
+    examples:
+      ? |
+        I'I
+      : |
+        I'll

@@ -13,5 +13,9 @@ rules:
     <<: *no-spam-text-contains-ignorecase
     patterns:
       - 'untertitelung:'
+      - 'bitte bewerte diese untertitel'
     examples:
       - 'Untertitelung: SUBS FooBar'
+      - |
+        Bitte bewerte diese Untertitel bei www.link/foobar
+        Helfe anderen Usern die besten Untertitel auszuwählen.
