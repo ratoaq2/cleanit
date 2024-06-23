@@ -27,8 +27,10 @@ rules:
       - 'tradução:'
       - 'legendas:'
       - 'legenda:'
+      - 'legendagem:'
       - 'sua melhor aposta em legendas'
       - 'tradução e legendas'
+      - 'legenda e tradução'
       - 'legendas e sincronização'
       - 'sincronia das legendas'
       - 'download de legendas'
@@ -40,15 +42,26 @@ rules:
       - 'legenda em'
       - 'legenda por'
       - 'legenda original'
+      - 'legendas no telegram'
       - 'ajude-nos e torne-se membro'
       - 'legendas traduzidas'
       - 'revisão e sincronismo'
       - 'revisão:'
+      - 'quer legendar'
+      - 'venha aprender a legendar'
+      - 'vem legendar'
+      - 'um novo conceito em legendas'
+      - 'legendas por'
+      - 'legendado por'
+      - 'legendas para a vida toda'
+      - 'não distribuir a legenda'
+      - 'um novo conceito em legendagem'
     examples:
       - 'Tradutora: FooBar'
       - 'Tradutor: FooBar'
       - 'Tradução: Foobar'
       - 'Legendas: FooBar'
+      - 'Legendagem:'
       - 'Sua melhor aposta em legendas!'
       - 'Tradução e Legendas'
       - 'Legendas e Sincronização'
@@ -59,6 +72,7 @@ rules:
       - 'Legenda em português: Foobar'
       - 'Legenda original: foobar'
       - 'Legenda por: foobar'
+      - 'legendas no telegram'
       - |
         <i>Legende conosco!
         foo@bar.com</i>
@@ -83,11 +97,23 @@ rules:
       - |
         <font color="#ffff00"><b>Revisão:
         foobar</b></font>
+      - 'Quer legendar com a gente?'
+      - 'Quer legendar conosco'
+      - '<b>Venha aprender a legendar!'
+      - '<i>Um novo conceito em legendas</i>'
+      - 'Legendas por:'
+      - '<i>Legendas por "foobar,'
+      - 'um novo conceito em legendagem."</i>'
+      - 'Legendas Para a Vida Toda!'
+      - 'Legenda e tradução by'
+      - 'Favor não distribuir a legenda com o vídeo.'
+      - '<b>Vem legendar!'
+      - '<b>*Vem legendar!*'
 
   drop-ads-and-credits-regex-exact[no-spam:pt]:
     <<: *no-spam-regex-multiline-ignorecase
     patterns:
-      - '^legenda$'
+      - '^legendas?$'
       - '^<.+>legenda$'
     examples:
       - |
@@ -96,3 +122,4 @@ rules:
       - |
         <font color=#FFFF00><b>Legenda
         - Foobar -</b></font>
+      - Legendas
