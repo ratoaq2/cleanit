@@ -7,6 +7,24 @@ templates:
     priority: 10000
 
 rules:
+  replace-ellipsis-character[ocr]:
+    <<: *ocr
+    patterns: '…'
+    replacement: '...'
+    examples:
+      ? |
+        Wait… what is that?
+      : |
+        Wait... what is that?
+  replace-st-ligatures[ocr]:
+    <<: *ocr
+    patterns: '[ﬅﬆ]'
+    replacement: 'st'
+    examples:
+      ? |
+        The ﬆep was the laﬆ one.
+      : |
+        The step was the last one.
   replace-smart-single-quote-to-single-quote[ocr]:
     <<: *ocr
     patterns: '[‘’]'
@@ -40,6 +58,73 @@ rules:
       : |
         "Senator", "we"'re making
         our "final" approach into "Coruscant".
+  replace-backticks-to-single-quote[ocr]:
+    <<: *ocr
+    patterns: '[`´]'
+    replacement: "'"
+    examples:
+      ? |
+        don`t do that, it´s dangerous.
+      : |
+        don't do that, it's dangerous.
+  replace-fi-ligature[ocr]:
+    <<: *ocr
+    patterns: 'ﬁ'
+    replacement: 'fi'
+    examples:
+      ? |
+        The ﬁrst of the ﬁles.
+      : |
+        The first of the files.
+  replace-fl-ligature[ocr]:
+    <<: *ocr
+    patterns: 'ﬂ'
+    replacement: 'fl'
+    examples:
+      ? |
+        A ﬂock of birds in ﬂight.
+      : |
+        A flock of birds in flight.
+  replace-ff-ligature[ocr]:
+    <<: *ocr
+    patterns: 'ﬀ'
+    replacement: 'ff'
+    examples:
+      ? |
+        Take oﬀ the coﬀee pot.
+      : |
+        Take off the coffee pot.
+  replace-ffi-ligature[ocr]:
+    <<: *ocr
+    patterns: 'ﬃ'
+    replacement: 'ffi'
+    examples:
+      ? |
+        That is strictly oﬃcial.
+      : |
+        That is strictly official.
+  replace-ffl-ligature[ocr]:
+    <<: *ocr
+    patterns: 'ﬄ'
+    replacement: 'ffl'
+    examples:
+      ? |
+        A souﬄé with waﬄes.
+      : |
+        A soufflé with waffles.
+  replace-spaced-ellipsis[ocr]:
+    <<: *ocr
+    patterns: '(?P<x>\S)?\s*(?:\.\s+){2,}\.'
+    replacement: '\g<x>...'
+    examples:
+      ? |
+        Wait . . . what is that?
+      : |
+        Wait... what is that?
+      ? |
+        And then . . . .
+      : |
+        And then...
   replace-|-to-I-character[ocr]:
     <<: *ocr
     patterns: '^(?P<x>-\s*)\|(?P<y>.*)$'
@@ -53,3 +138,141 @@ rules:
           - |sso.
         : |
           - Isso.
+  replace-O-to-0-in-numbers[ocr]:
+    <<: *ocr
+    patterns:
+      - '\b(?P<x>[0-9]+)O(?P<y>[0-9]+)\b'
+      - '\b(?P<x>[0-9]+)O(?P<y>)\b'
+      - '\b(?P<x>)O(?P<y>[0-9]{2,})\b'
+    replacement: '\g<x>0\g<y>'
+    examples:
+      ? |
+        "Mas são US$ 5O a mais por mês".
+      : |
+        "Mas são US$ 50 a mais por mês".
+      ? |
+        o restante do 5O6...
+      : |
+        o restante do 506...
+      ? |
+        Seguindo por O42, 12 minutos.
+      : |
+        Seguindo por 042, 12 minutos.
+      ? |
+        Digamos 358, por 1O minutos e meio.
+      : |
+        Digamos 358, por 10 minutos e meio.
+      ? |
+        Um copo de H2O, por favor.
+      : |
+        Um copo de H2O, por favor.
+      ? |
+        OK, vamos.
+      : |
+        OK, vamos.
+      ? |
+        o restante do 506...
+      : |
+        o restante do 506...
+      ? |
+        O nível de O2 está caindo.
+      : |
+        O nível de O2 está caindo.
+  replace-OO-to-00-in-numbers[ocr]:
+    <<: *ocr
+    patterns:
+      - '\b(?P<x>[0-9]+)OO(?P<y>)\b'
+      - '\b(?P<x>)OO(?P<y>[0-9]+)\b'
+    replacement: '\g<x>00\g<y>'
+    examples:
+      ? |
+        Dariam 1OO pratas.
+      : |
+        Dariam 100 pratas.
+      ? |
+        Este homem tinha 2OO camisinhas.
+      : |
+        Este homem tinha 200 camisinhas.
+      ? |
+        Um copo de H2O, por favor.
+      : |
+        Um copo de H2O, por favor.
+      ? |
+        Dariam 100 pratas.
+      : |
+        Dariam 100 pratas.
+  replace-l-to-I-in-uppercase-word[ocr]:
+    <<: *ocr
+    patterns:
+      - '\bl(?=[[:upper:]]{2,}\b)'
+      - '(?<=[[:upper:]])l(?=[[:upper:]])'
+    replacement: 'I'
+    examples:
+      ? |
+        UPOTTERY, lNGLATERRA
+      : |
+        UPOTTERY, INGLATERRA
+      ? |
+        ACAMPAMENTO TOCCOA, GEÓRGlA
+      : |
+        ACAMPAMENTO TOCCOA, GEÓRGIA
+      ? |
+        31 DE MAlO DE 1944
+      : |
+        31 DE MAIO DE 1944
+      ? |
+        Legal, elas precisam de companhia feminina.
+      : |
+        Legal, elas precisam de companhia feminina.
+      ? |
+        milhões de pessoas
+      : |
+        milhões de pessoas
+      ? |
+        UPOTTERY, INGLATERRA
+      : |
+        UPOTTERY, INGLATERRA
+  replace-V-to-v-mid-word[ocr]:
+    <<: *ocr
+    patterns:
+      - '\b(?P<x>[Ll]e)V(?P<y>antamos)\b'
+      - '\b(?P<x>[Ss]er)V(?P<y>ir)\b'
+      - '\b(?P<x>[Ff]a)V(?P<y>or)\b'
+    replacement: '\g<x>v\g<y>'
+    examples:
+      ? |
+        Nós leVantamos cedo
+      : |
+        Nós levantamos cedo
+      ? |
+        Se quer tanto serVir a uma causa, por faVor.
+      : |
+        Se quer tanto servir a uma causa, por favor.
+      ? |
+        Vamos assistir TV.
+      : |
+        Vamos assistir TV.
+      ? |
+        Nós levantamos cedo
+      : |
+        Nós levantamos cedo
+      ? |
+        I recorded it on my TiVix box.
+      : |
+        I recorded it on my TiVix box.
+      ? |
+        Detective DeVane took the case.
+      : |
+        Detective DeVane took the case.
+      ? |
+        My uncle McVane owns a boat.
+      : |
+        My uncle McVane owns a boat.
+      ? |
+        The nanny's name was VeeVee.
+      : |
+        The nanny's name was VeeVee.
+      ? |
+        Check out UpTubeVid for clips.
+      : |
+        Check out UpTubeVid for clips.

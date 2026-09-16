@@ -1,0 +1,11 @@
+description: >
+  Broad sanity check running every default tag (ocr, tidy, no-style, no-sdh,
+  no-lyrics, no-spam) against a wide mix of English OCR artefacts, SDH
+  descriptions, lyrics, ads, and formatting quirks.
+tags:
+  - ocr
+  - tidy
+  - no-style
+  - no-sdh
+  - no-lyrics
+  - no-spam

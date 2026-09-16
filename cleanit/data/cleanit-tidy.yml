@@ -25,6 +25,19 @@ rules:
         "FooBar"  ...
       : |
         "FooBar"...
+  add-space-after-comma[tidy]:
+    <<: *tidy
+    patterns: '(?P<x>[[:upper:][:lower:]]),(?P<y>[[:upper:][:lower:]])'
+    replacement: '\g<x>, \g<y>'
+    examples:
+      ? |
+        Ora,essa é uma surpresa e tanto.
+      : |
+        Ora, essa é uma surpresa e tanto.
+      ? |
+        - Happy hour,hein?
+      : |
+        - Happy hour, hein?
   add-extra-space-after-dash[tidy]:
     <<: *tidy
     patterns: '(?:^(?P<x>|(?:\<\w\>)))-(?P<y>(?:\.{2,3})?[''\"]?[\w|(]+)'

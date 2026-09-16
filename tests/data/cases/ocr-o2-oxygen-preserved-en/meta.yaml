@@ -1,0 +1,7 @@
+description: >
+  Regression for replace-O-to-0-in-numbers[ocr]: the "O" + digits pattern
+  used to fire on a single trailing digit, turning the chemical notation
+  "O2" (oxygen) into "02". It's now restricted to 2+ digits, which still
+  catches genuine misread numbers like "O42" -> "042".
+tags:
+  - ocr
