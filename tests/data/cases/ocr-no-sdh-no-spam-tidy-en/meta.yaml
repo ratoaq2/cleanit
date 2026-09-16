@@ -1,0 +1,9 @@
+description: >
+  Checks that lyrics and font-style tags are left alone when the no-lyrics
+  and no-style tags are not selected, while ocr/no-sdh/no-spam/tidy still
+  apply.
+tags:
+  - ocr
+  - no-sdh
+  - no-spam
+  - tidy

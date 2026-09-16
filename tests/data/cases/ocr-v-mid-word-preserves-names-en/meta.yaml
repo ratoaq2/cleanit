@@ -1,0 +1,7 @@
+description: >
+  Regression for replace-V-to-v-mid-word[ocr]: it used to lowercase any
+  capital V sitting between two lowercase letters, which mangled CamelCase
+  brand names and surnames (e.g. TiVo, DeVille, McVries). The rule is now a
+  narrow word list, so these fictional look-alikes must survive untouched.
+tags:
+  - ocr

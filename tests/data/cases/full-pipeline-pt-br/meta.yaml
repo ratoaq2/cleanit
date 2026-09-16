@@ -1,0 +1,10 @@
+description: >
+  Same broad sanity check as full-pipeline-en, but for Brazilian Portuguese
+  OCR artefacts.
+tags:
+  - ocr
+  - tidy
+  - no-style
+  - no-sdh
+  - no-lyrics
+  - no-spam

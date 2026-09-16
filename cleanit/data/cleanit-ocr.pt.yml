@@ -53,6 +53,16 @@ rules:
       mudár-la: mudá-la
       nomeár-lo,: nomeá-lo,
       Roubár-la: Roubá-la
+  replace-êr-ôr-l-to-ê-ô-l-suffix[ocr:pt]:
+    <<: *ocr
+    patterns: '(?P<x>\w+[êôÊÔ])r(?P<y>-l[ao]s?)'
+    flags: ignorecase
+    replacement: '\g<x>\g<y>'
+    examples:
+      fazêr-lo: fazê-lo
+      compôr-la: compô-la
+      conhecêr-los: conhecê-los
+      supôr-las: supô-las
   fix-não/pão/vão-accents[ocr:pt]:
     <<: *ocr
     patterns: '\b(?P<x>[npvNPV])[áâ](?P<y>[oO])'
@@ -107,3 +117,203 @@ rules:
     examples:
       rel: rei
       Rel: Rei
+  fix-l-to-i-words[ocr:pt]:
+    <<: *ocr
+    patterns:
+      - '\b(?P<x>[Dd]epo)l(?P<y>s)\b'
+      - '\b(?P<x>[Mm]a)l(?P<y>s)\b'
+      - '\b(?P<x>[Mm]u)[lI](?P<y>to)\b'
+      - '\b(?P<x>[Nn]o)l(?P<y>te)\b'
+      - '\b(?P<x>[Cc]o)l(?P<y>sas?)\b'
+      - '\b(?P<x>[Dd]o)l(?P<y>s)\b'
+      - '\b(?P<x>[Ff]o)l(?P<y>)\b'
+      - '\b(?P<x>[Ss]a)l(?P<y>u)\b'
+    replacement: '\g<x>i\g<y>'
+    examples:
+      ? |
+        depols de tudo, mals uma nolte e muIto amor.
+      : |
+        depois de tudo, mais uma noite e muito amor.
+      ? |
+        fol colsa de dols dias e ele salu.
+      : |
+        foi coisa de dois dias e ele saiu.
+  fix-broken-c-cedilla[ocr:pt]:
+    <<: *ocr
+    patterns:
+      - '(?P<x>\b\w*)c,(?P<y>[aáãouAÁÃOU]\w*\b)'
+    replacement: '\g<x>ç\g<y>'
+    examples:
+      ? |
+        atenc,ão e corac,ão
+      : |
+        atenção e coração
+      ? |
+        comec,ou a forca
+      : |
+        começou a forca
+      ? |
+        Encontrei o Isaac, ele já foi embora.
+      : |
+        Encontrei o Isaac, ele já foi embora.
+      ? |
+        Falei com o Zac,
+        ele nem apareceu.
+      : |
+        Falei com o Zac,
+        ele nem apareceu.
+  fix-ê-to-é-common-words[ocr:pt]:
+    <<: *ocr
+    patterns:
+      - '\b(?P<x>[Tt]amb)ê(?P<y>m)\b'
+      - '\b(?P<x>[Nn]ingu)ê(?P<y>m)\b'
+      - '\b(?P<x>[Aa]lgu)ê(?P<y>m)\b'
+      - '\b(?P<x>[Pp]arab)ê(?P<y>ns)\b'
+      - '\b(?P<x>[Cc]af)ê(?P<y>)\b'
+      - '\b(?P<x>[Aa]t)ê(?P<y>)\b'
+      - '\b(?P<x>[Ii]d)ê(?P<y>ia)\b'
+      - '\b(?P<x>[Ss]op)ê(?P<y>)\b'
+      - '\b(?P<x>[Ee]x)ê(?P<y>rcito)\b'
+      - '\b(?P<x>[Mm]agn)ê(?P<y>tica)\b'
+      - '\b(?P<x>[Cc])ê(?P<y>u)\b'
+      - '\b(?P<x>[Gg]onorr)ê(?P<y>ia)\b'
+      - '\b(?P<x>[Vv])ê(?P<y>speras)\b'
+      - '\b(?P<x>[Mm])ê(?P<y>dicos)\b'
+      - '\b(?P<x>a)ê(?P<y>reo)\b'
+    replacement: '\g<x>é\g<y>'
+    examples:
+      ? |
+        Ele detesta você tambêm, Muck.
+      : |
+        Ele detesta você também, Muck.
+      ? |
+        Ninguêm nunca tinha ouvido falar.
+      : |
+        Ninguém nunca tinha ouvido falar.
+      ? |
+        Alguêm responda.
+      : |
+        Alguém responda.
+      ? |
+        Parabêns, capitão Sobel.
+      : |
+        Parabéns, capitão Sobel.
+      ? |
+        só pra estragar o cafê da manhã do cara?
+      : |
+        só pra estragar o café da manhã do cara?
+      ? |
+        Vamos atê o fim, certo?
+      : |
+        Vamos até o fim, certo?
+      ? |
+        Ótima idêia, Joe.
+      : |
+        Ótima idéia, Joe.
+      ? |
+        no sopê da montanha!
+      : |
+        no sopé da montanha!
+      ? |
+        Quem se oferece para o Exêrcito?
+      : |
+        Quem se oferece para o Exército?
+      ? |
+        declinação magnêtica...
+      : |
+        declinação magnética...
+      ? |
+        caindo do cêu hoje.
+      : |
+        caindo do céu hoje.
+      ? |
+        Gonorrêia chamou o Sobel de judeu.
+      : |
+        Gonorréia chamou o Sobel de judeu.
+      ? |
+        estamos às vêsperas da maior ação
+      : |
+        estamos às vésperas da maior ação
+      ? |
+        como mêdicos e capelães
+      : |
+        como médicos e capelães
+      ? |
+        O objetivo do ataque aêreo é tomar Careltan.
+      : |
+        O objetivo do ataque aéreo é tomar Careltan.
+      ? |
+        Você também não está mal.
+      : |
+        Você também não está mal.
+      ? |
+        Três caras de lá que foram dispensados.
+      : |
+        Três caras de lá que foram dispensados.
+      ? |
+        Vocês têm 30 min pra chegar ao topo.
+      : |
+        Vocês têm 30 min pra chegar ao topo.
+      ? |
+        O tenente Sobel nos detesta, senhor.
+      : |
+        O tenente Sobel nos detesta, senhor.
+  replace-ê-to-é-standalone[ocr:pt]:
+    <<: *ocr
+    patterns: '\bê\b'
+    replacement: 'é'
+    examples:
+      ? |
+        "Que diabo ê isso?"
+      : |
+        "Que diabo é isso?"
+      ? |
+        O que ê?
+      : |
+        O que é?
+      ? |
+        Você também não está mal.
+      : |
+        Você também não está mal.
+      ? |
+        Éramos de uma cidade muito pequena.
+      : |
+        Éramos de uma cidade muito pequena.
+  fix-l-to-I-character[ocr:pt]:
+    <<: *ocr
+    patterns:
+      - '\bl(?P<y>sso|sto|remos|legal|nformar|tália)\b'
+    replacement: 'I\g<y>'
+    examples:
+      ? |
+        lsso está alaranjado.
+      : |
+        Isso está alaranjado.
+      ? |
+        lsto pesa tanto quanto eu.
+      : |
+        Isto pesa tanto quanto eu.
+      ? |
+        lremos pra Chicago.
+      : |
+        Iremos pra Chicago.
+      ? |
+        Pornografia. llegal.
+      : |
+        Pornografia. Ilegal.
+      ? |
+        - lnformar verificação!
+      : |
+        - Informar verificação!
+      ? |
+        Em algum lugar da ltália.
+      : |
+        Em algum lugar da Itália.
+      ? |
+        Vamos, Alley! Vamos, Guarnere!
+      : |
+        Vamos, Alley! Vamos, Guarnere!
+      ? |
+        Legal, elas precisam de companhia feminina.
+      : |
+        Legal, elas precisam de companhia feminina.
