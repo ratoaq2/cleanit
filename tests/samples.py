@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 
 from babelfish import Language
@@ -25,18 +24,18 @@ def regenerate(config: Config, index: int, language: Language):
     input_srt.clean_indexes()
     expected_srt.clean_indexes()
     if enabled:
-        input_srt.save(os.path.join(here, 'data', f'{index:04d}.{str(language)}.srt'))
-        expected_srt.save(os.path.join(here, 'data', f'{index:04d}-expected.{str(language)}.srt'))
+        input_srt.save(os.path.join(here, "data", f"{index:04d}.{str(language)}.srt"))
+        expected_srt.save(os.path.join(here, "data", f"{index:04d}-expected.{str(language)}.srt"))
 
 
 def main():
     config = Config()
-    languages = [Language.fromietf(lang) for lang in ('en', 'pt-BR')]
+    languages = [Language.fromietf(lang) for lang in ("en", "pt-BR")]
     i = 0
     for language in languages:
         regenerate(config, i, language)
         i += 1
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -5,9 +5,11 @@ Subtitles extremely clean.
 [![Latest
 Version](https://img.shields.io/pypi/v/cleanit.svg)](https://pypi.python.org/pypi/cleanit)
 
+[![Supported versions](https://img.shields.io/pypi/pyversions/cleanit.svg)](https://pypi.python.org/pypi/cleanit)
+
 [![tests](https://github.com/ratoaq2/cleanit/actions/workflows/test.yml/badge.svg)](https://github.com/ratoaq2/cleanit/actions/workflows/test.yml)
 
-[![License](https://img.shields.io/github/license/ratoaq2/cleanit.svg)](https://github.com/ratoaq2/cleanit/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/ratoaq2/cleanit.svg)](https://github.com/ratoaq2/cleanit/blob/main/LICENSE)
 
   - Project page  
     <https://github.com/ratoaq2/cleanit>
@@ -26,6 +28,24 @@ used. It comes with standard rules out of the box:
   - no-style: Remove font style tags like \<i\> and \<b\>
   - minimal: includes only ocr and tidy rules
   - default: includes all rules except no-style
+
+## Installation
+
+Run it without installing anything, using [uv](https://docs.astral.sh/uv/):
+
+    $ uvx cleanit --help
+
+To install it as a standalone tool with uv (adds `cleanit` to your `PATH`):
+
+    $ uv tool install cleanit
+
+Or install it with [pip](https://pip.pypa.io):
+
+    $ pip install cleanit
+
+CleanIt is also available as a [Docker image](https://hub.docker.com/r/ratoaq2/cleanit):
+
+    $ docker run -it --rm ratoaq2/cleanit --help
 
 ## Usage
 
@@ -78,9 +98,9 @@ Using docker:
 ``` python
 from cleanit import Config, Subtitle
 
-sub = Subtitle('/subtitle/path/subtitle.en.srt')
-cfg = Config.from_path('/config/path')
-rules = cfg.select_rules(tags={'ocr'})
+sub = Subtitle("/subtitle/path/subtitle.en.srt")
+cfg = Config.from_path("/config/path")
+rules = cfg.select_rules(tags={"ocr"})
 if sub.clean(rules):
     sub.save()
 ```

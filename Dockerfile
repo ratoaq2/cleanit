@@ -1,25 +1,20 @@
-FROM python:3.13-slim as builder
+FROM ghcr.io/astral-sh/uv:python3.14-bookworm-slim AS builder
 
 ENV PYTHONFAULTHANDLER=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONHASHSEED=random \
     PYTHONDONTWRITEBYTECODE=1 \
-    PIP_NO_CACHE_DIR=off \
-    PIP_DISABLE_PIP_VERSION_CHECK=on \
-    PIP_DEFAULT_TIMEOUT=100 \
-    POETRY_VERSION=1.8.3 \
-    POETRY_VIRTUALENVS_CREATE=0
-
-RUN pip install "poetry==$POETRY_VERSION"
+    UV_NO_CACHE=1 \
+    UV_LOCKED=1
 
 WORKDIR /app
-COPY poetry.lock pyproject.toml README.md /app/
-RUN poetry install --no-interaction --no-ansi --only main
+COPY uv.lock pyproject.toml README.md /app/
+RUN uv sync --no-install-project --no-dev
 COPY cleanit/ /app/cleanit/
-RUN poetry build --no-interaction --no-ansi
+RUN uv build
 
 
-FROM python:3.13-slim
+FROM python:3.14-slim
 
 ENV PYTHONFAULTHANDLER=1 \
     PYTHONUNBUFFERED=1 \
