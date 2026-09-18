@@ -1,0 +1,9 @@
+description: >
+  Regression for drop-orphan-dash-lines[tidy]: when an SDH bracket filled a
+  whole dialogue line, drop-brackets-end-of-line[no-sdh] removed the bracket
+  but left the speaker dash behind, so entries ended up with a line holding
+  nothing but "-". Orphan dash lines are now dropped, at either end of the
+  entry, while real two-speaker dashes stay.
+tags:
+  - no-sdh
+  - tidy

@@ -92,7 +92,8 @@ rules:
     <<: *ocr
     patterns:
       - '(?P<x>)\bl''(?P<y>m|ll|d|ve|s|re)\b'
-      - '(?P<x>^|[\s"''(-])[|1]''(?P<y>m|ll|d|ve|s|re)\b'
+      - '(?P<x>^|[\s"''(])\|''(?P<y>m|ll|d|ve|s|re)\b'
+      - '(?P<x>^|[\s"''(])1''(?P<y>m|ll|d|ve|re)\b'
     replacement: '\g<x>I''\g<y>'
     examples:
       ? |
@@ -103,6 +104,22 @@ rules:
         |'ve seen what 1'd do.
       : |
         I've seen what I'd do.
+      ? |
+        Number 1's roll on back!
+      : |
+        Number 1's roll on back!
+      ? |
+        The rover STR-1's are light.
+      : |
+        The rover STR-1's are light.
+      ? |
+        begins with Metro 1's
+      : |
+        begins with Metro 1's
+      ? |
+        Take the 1's and the 2's.
+      : |
+        Take the 1's and the 2's.
   replace-[I-to-I-character[ocr:en]:
     <<: *ocr
     patterns: '\[I\b'

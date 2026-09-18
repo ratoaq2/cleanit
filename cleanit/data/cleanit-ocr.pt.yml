@@ -123,7 +123,7 @@ rules:
       - '\b(?P<x>[Dd]epo)l(?P<y>s)\b'
       - '\b(?P<x>[Mm]a)l(?P<y>s)\b'
       - '\b(?P<x>[Mm]u)[lI](?P<y>to)\b'
-      - '\b(?P<x>[Nn]o)l(?P<y>te)\b'
+      - '\b(?P<x>no)l(?P<y>te)\b'
       - '\b(?P<x>[Cc]o)l(?P<y>sas?)\b'
       - '\b(?P<x>[Dd]o)l(?P<y>s)\b'
       - '\b(?P<x>[Ff]o)l(?P<y>)\b'
@@ -138,6 +138,14 @@ rules:
         fol colsa de dols dias e ele salu.
       : |
         foi coisa de dois dias e ele saiu.
+      ? |
+        Eu prefiro o Nolte naquele papel.
+      : |
+        Eu prefiro o Nolte naquele papel.
+      ? |
+        - Boa nolte, Nolte.
+      : |
+        - Boa noite, Nolte.
   fix-broken-c-cedilla[ocr:pt]:
     <<: *ocr
     patterns:

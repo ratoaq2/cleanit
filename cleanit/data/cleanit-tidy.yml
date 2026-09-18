@@ -104,6 +104,35 @@ rules:
         - Oh, if you were my girl,
         - I wouldn't leave you alone.
         And you shouldn't leave me alone.
+  drop-orphan-dash-lines[tidy]:
+    <<: *tidy
+    patterns:
+      - '\n[ \t]*-[ \t]*(?=\n|$)'
+      - '^[ \t]*-[ \t]*\n'
+    replacement: ''
+    examples:
+      ? |
+        - At first, I thought...
+        -
+      : |
+        - At first, I thought...
+      ? |
+        -
+        - Howdy, cowboys and cowgirls!
+      : |
+        - Howdy, cowboys and cowgirls!
+      ? |
+        - Are you sure?
+        - Yes.
+      : |
+        - Are you sure?
+        - Yes.
+      ? |
+        - Wait...
+        - ...for what?
+      : |
+        - Wait...
+        - ...for what?
   replace----with-...[tidy]:
     <<: *tidy
     patterns: '(?P<x>\w)\-{2}$'
