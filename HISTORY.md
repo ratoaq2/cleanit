@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.0
+
+**Release date:** 2026-09-18
+
+- Modernize packaging, linting, and CI tooling
+- Fix OCR rules that wrongly matched real words, plurals, and names
+- Remove pt-BR sync credits, upload credits, and anti-piracy notices from subtitles
+- Drop orphan dash-only lines left behind by SDH removal
+
 ## 0.4.9
 
 **Release date:** 2025-07-26
