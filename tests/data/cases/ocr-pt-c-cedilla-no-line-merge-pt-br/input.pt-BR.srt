@@ -1,0 +1,9 @@
+1
+00:00:01,000 --> 00:00:02,000
+Falei com o Zac,
+ele nem apareceu.
+
+2
+00:00:02,500 --> 00:00:03,500
+Isso me deixou com atenc,ão redobrada.
+

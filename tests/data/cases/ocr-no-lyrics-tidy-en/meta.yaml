@@ -1,0 +1,8 @@
+description: >
+  Checks that SDH parenthetical descriptions and font-style tags are left
+  alone when the no-sdh and no-style tags are not selected, while
+  ocr/no-lyrics/tidy still apply.
+tags:
+  - ocr
+  - no-lyrics
+  - tidy

@@ -1,0 +1,20 @@
+1
+00:00:01,000 --> 00:00:02,000
+Number 1's roll on back!
+
+2
+00:00:02,500 --> 00:00:03,500
+The rover STR-1's are light.
+
+3
+00:00:04,000 --> 00:00:05,000
+Take the 1's and the 2's.
+
+4
+00:00:05,500 --> 00:00:06,500
+Come on, man. I'll be fine.
+
+5
+00:00:07,000 --> 00:00:08,000
+I've seen what I'm up against.
+

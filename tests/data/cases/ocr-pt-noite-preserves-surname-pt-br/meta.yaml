@@ -1,0 +1,7 @@
+description: >
+  Regression for fix-l-to-i-words[ocr:pt]: the "nolte" -> "noite" pattern also
+  accepted a leading capital, so the surname "Nolte" was rewritten to "Noite"
+  in real dialogue. The pattern is lowercase-only now, which still covers every
+  observed OCR case ("Boa nolte", "hoje a nolte").
+tags:
+  - ocr

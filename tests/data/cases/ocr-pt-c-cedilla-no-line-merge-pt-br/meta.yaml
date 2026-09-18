@@ -1,0 +1,9 @@
+description: >
+  Regression for fix-broken-c-cedilla[ocr:pt]: the pattern used to allow
+  whitespace (including the newline inside a two-line entry) between "c,"
+  and the following word, so a name ending in "c," followed by a
+  vowel-starting line got merged into one garbled word. Whitespace is no
+  longer allowed, so multi-line entries stay untouched while the real
+  broken-cedilla-in-one-word case (e.g. "atenc,ao") still gets fixed.
+tags:
+  - ocr

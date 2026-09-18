@@ -8,6 +8,36 @@ templates:
     languages: en
 
 rules:
+  replace-0-to-o-common-words[ocr:en]:
+    <<: *ocr
+    patterns:
+      - '\b0(?P<x>f)\b'
+      - '\b0(?P<x>ne|nly)\b'
+    replacement: 'o\g<x>'
+    examples:
+      ? |
+        that's 0nly 0ne 0f them.
+      : |
+        that's only one of them.
+  replace-vv-to-w-common-words[ocr:en]:
+    <<: *ocr
+    patterns:
+      - '\bvv(?P<x>hat|hen|here|ho|hy|ould)\b'
+    replacement: 'w\g<x>'
+    examples:
+      ? |
+        vvhat do you mean? vvhy vvould he go?
+      : |
+        what do you mean? why would he go?
+  replace-VV-to-W-common-words[ocr:en]:
+    <<: *ocr
+    patterns: '\bVV(?P<x>HAT|HEN|HERE|HO|HY|OULD)\b'
+    replacement: 'W\g<x>'
+    examples:
+      ? |
+        VVHAT do you mean? VVHY WOULD he go?
+      : |
+        WHAT do you mean? WHY WOULD he go?
   replace-|/-to-I-character[ocr:en]:
     <<: *ocr
     patterns: '(?P<x>\s|"|^)(\/|\|)(?P<y>t?\W|$)'
@@ -58,6 +88,38 @@ rules:
         And if l refuse?
       : |
         And if I refuse?
+  replace-l-|1-in-contractions[ocr:en]:
+    <<: *ocr
+    patterns:
+      - '(?P<x>)\bl''(?P<y>m|ll|d|ve|s|re)\b'
+      - '(?P<x>^|[\s"''(])\|''(?P<y>m|ll|d|ve|s|re)\b'
+      - '(?P<x>^|[\s"''(])1''(?P<y>m|ll|d|ve|re)\b'
+    replacement: '\g<x>I''\g<y>'
+    examples:
+      ? |
+        l'm not sure if l'll go.
+      : |
+        I'm not sure if I'll go.
+      ? |
+        |'ve seen what 1'd do.
+      : |
+        I've seen what I'd do.
+      ? |
+        Number 1's roll on back!
+      : |
+        Number 1's roll on back!
+      ? |
+        The rover STR-1's are light.
+      : |
+        The rover STR-1's are light.
+      ? |
+        begins with Metro 1's
+      : |
+        begins with Metro 1's
+      ? |
+        Take the 1's and the 2's.
+      : |
+        Take the 1's and the 2's.
   replace-[I-to-I-character[ocr:en]:
     <<: *ocr
     patterns: '\[I\b'
@@ -70,10 +132,50 @@ rules:
   replace-I'I-to-I'll[ocr:en]:
     <<: *ocr
     patterns:
-      - '\bI''I\b'
+      - '\bI''[I|1]{1,2}\b'
+      - '\bI''[lI|1][I|1]\b'
+      - '\bI''l\b'
     replacement: 'I''ll'
     examples:
       ? |
         I'I
       : |
         I'll
+      ? |
+        I'II be there.
+      : |
+        I'll be there.
+      ? |
+        I'l do it.
+      : |
+        I'll do it.
+  replace-0-to-O-character[ocr:en]:
+    <<: *ocr
+    patterns:
+      - '\b0(?P<x>K|k)\b'
+      - '\b0(?P<x>''[cC]lock)\b'
+      - '\b0(?P<x>h|n|H|N|F)\b'
+    replacement: 'O\g<x>'
+    examples:
+      ? |
+        0K, let's meet at 5 0'clock.
+      : |
+        OK, let's meet at 5 O'clock.
+      ? |
+        0k, sounds good.
+      : |
+        Ok, sounds good.
+      ? |
+        0h no. 0F COURSE!
+      : |
+        Oh no. OF COURSE!
+  drop-space-before-apostrophe[ocr:en]:
+    <<: *ocr
+    patterns:
+      - '(?P<x>\b\w+)\s+''(?P<y>(?:t|m|re|ll|ve|d|s)\b)'
+    replacement: '\g<x>''\g<y>'
+    examples:
+      ? |
+        I 'm sure you can 't do that.
+      : |
+        I'm sure you can't do that.

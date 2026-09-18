@@ -1,47 +1,49 @@
-import glob
-import os
-import re
+from pathlib import Path
 
 import pysrt
 import pytest
-from babelfish import Language
+import yaml
 
 from cleanit.config import Config
 from cleanit.rule import Rules
-from cleanit.subtitle import Subtitle
+from cleanit.subtitle import Subtitle, get_subtitle_language
 
-data_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "data")
+cases_path = Path(__file__).parent / "data" / "cases"
+
+
+def _reformat(srt_path: Path) -> None:
+    """Normalize a fixture through pysrt so its on-disk formatting matches what Subtitle.content produces."""
+    srt = pysrt.open(str(srt_path))
+    srt.clean_indexes()
+    srt.save()
 
 
 def generate_params():
     cfg = Config()
-    f_re = re.compile(r"(?P<id>\d{3})\.B(?P<tags>(?:\.[-\w]+)*)\.(?P<lang>[a-zA-Z-]+)\.srt")
-    expected_files = glob.glob(os.path.join(data_path, "[0-9][0-9][0-9].B.*.srt"))
     params = []
-    for f in expected_files:
-        folder, filename = os.path.split(f)
-        matches = f_re.match(filename).groupdict()
-        f_id = int(matches.get("id"))
-        tags = {t for t in matches.get("tags", "").split(".") if t}
-        f_lang = Language.fromietf(matches.get("lang"))
-        input_file = os.path.join(folder, f"{f_id:03d}.A.{str(f_lang)}.srt")
-        for s in (input_file, f):
-            srt = pysrt.open(s)
-            srt.clean_indexes()
-            srt.save()
-        params.append((cfg.select_rules(tags=tags, languages={f_lang}), input_file, f))
+    for case_dir in sorted(p for p in cases_path.iterdir() if p.is_dir()):
+        meta = yaml.safe_load((case_dir / "meta.yaml").read_text(encoding="utf-8"))
+        tags = set(meta.get("tags", []))
+
+        # the language is carried by the filename itself (e.g. input.pt-BR.srt), exactly like
+        # Subtitle does for real files, so a case can never drift out of sync with what it tests.
+        (input_file,) = case_dir.glob("input.*.srt")
+        (expected_file,) = case_dir.glob("expected.*.srt")
+        _reformat(input_file)
+        _reformat(expected_file)
+
+        rules = cfg.select_rules(tags=tags, languages={get_subtitle_language(str(input_file))})
+        params.append(pytest.param(rules, input_file, expected_file, id=case_dir.name))
 
     return params
 
 
 @pytest.mark.parametrize("rules,input_file,expected_file", generate_params())
-def test_data_files(rules: Rules, input_file, expected_file):
+def test_data_files(rules: Rules, input_file: Path, expected_file: Path) -> None:
     # given
-    subtitle = Subtitle(input_file)
-    with open(expected_file, encoding="utf8") as f:
-        expected_text = f.read().strip()
+    subtitle = Subtitle(str(input_file))
+    expected_text = expected_file.read_text(encoding="utf-8").strip()
     # when
     subtitle.clean(rules)
     # then
-
     assert subtitle.content == expected_text

@@ -1,0 +1,12 @@
+1
+00:00:01,000 --> 00:00:02,000
+Gosto do Nolte naquele papel.
+
+2
+00:00:02,500 --> 00:00:03,500
+Boa nolte, pessoal.
+
+3
+00:00:04,000 --> 00:00:05,000
+Passamos a nolte toda acordados.
+

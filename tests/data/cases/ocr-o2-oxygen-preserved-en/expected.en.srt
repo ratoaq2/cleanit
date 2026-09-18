@@ -1,0 +1,12 @@
+1
+00:00:01,000 --> 00:00:02,000
+The O2 levels are dropping fast.
+
+2
+00:00:02,500 --> 00:00:03,500
+Check the O2 tank before we go.
+
+3
+00:00:04,000 --> 00:00:05,000
+Suite 042 is down the hall.
+
