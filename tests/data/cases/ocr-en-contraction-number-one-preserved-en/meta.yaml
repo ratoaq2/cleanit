@@ -1,0 +1,8 @@
+description: >
+  Regression for replace-l-|1-in-contractions[ocr:en]: the rule used to read a
+  digit "1" before "'s" as a misread "I", so genuine plurals of the number one
+  ("Number 1's", part codes like "STR-1's") became "I's". The "1" variant no
+  longer accepts the "s" suffix and no longer matches after a hyphen, while
+  unambiguous contractions like "1'll" and "|'ve" are still repaired.
+tags:
+  - ocr
