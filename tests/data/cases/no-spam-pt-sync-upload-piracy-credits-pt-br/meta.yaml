@@ -1,0 +1,9 @@
+description: >
+  Covers the three pt-BR spam families that release groups put at the head of a
+  file: upload credits ("Legenda enviada por: <nick>"), sync/resync credits
+  ("Sincronia para 720p: <nick>", "Resinc: <nick>") and anti-piracy notices
+  ("Comprar DVD pirata e incentivar o crime organizado!"). Real dialogue that
+  uses the same words ("pirata", "sincronia", "legenda", "crime organizado")
+  must survive untouched.
+tags:
+  - no-spam
