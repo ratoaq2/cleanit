@@ -110,6 +110,101 @@ rules:
       - '<b>Vem legendar!'
       - '<b>*Vem legendar!*'
 
+  drop-ads-and-credits-regex[no-spam:pt]:
+    <<: *no-spam-regex-multiline-ignorecase
+    patterns:
+      # "Legenda <anything> por/by <nick>": covers "Legenda enviada por:",
+      # "Legendas traduzidas por", "Legendas BR by", ... The gap stops at a colon so
+      # the credit label stays on the left of it.
+      - '\blegendas?\b[^\n:]{0,24}\b(?:por|by)\b'
+    examples:
+      'Legenda enviada por: janus':
+      'Legendas by dmanske':
+      '<font color="#ffff00">Legendas BR by Cross65</font>':
+      # real dialogue must survive: "legenda" is a normal word (caption/inscription)
+      'A legenda da foto estava errada.': 'A legenda da foto estava errada.'
+      'Leia a legenda embaixo do quadro.': 'Leia a legenda embaixo do quadro.'
+
+  drop-sync-credits[no-spam:pt]:
+    <<: *no-spam-regex-multiline-ignorecase
+    patterns:
+      # "Resinc", "Ressinc", "Resync", "Ressincronia", "Resyncs", ... but never the
+      # verb ("ressincronizar", "ressincronize"), which can be real dialogue.
+      - '\bre-?ss?[iy]nc(?:s|ronia|roniza[çc][ãa]o)?\b'
+      # credit label ending in a colon: "SINCRONIA:", "Sincronia para 720p:",
+      # "Sincronia e Correções:", "Tradução e Sincronia:"
+      - '\bsincroni(?:a|smo|za[çc][ãa]o)\b[^\n:]{0,24}:'
+      # "Sincronia by DanDee", "Sincronização por Foo"
+      - '\bsincroni(?:a|smo|za[çc][ãa]o)\s+(?:by|por)\b'
+      # "Sincronia HD", "Sincronia BDRIP 720p - Nathan", "Resync WEB-DL"
+      - '\bsincroni\w*\s+(?:bd|bdrip|blu-?ray|web-?dl|hd|dvd\w*|720p|1080p|2160p|x26[45])\b'
+      # a line holding nothing but the label, with the nick on the next line
+      - '^(?:<[^>]+>|[^\w\n])*sincroni(?:a|smo)(?:<[^>]+>|[^\w\n])*$'
+    examples:
+      'Sincronia para 720p: fferraz':
+      'Resinc: Siegfried':
+      'Ressinc BluRay:':
+      'Resync DVDRip marcusfilippe':
+      'ReSync feito por RyU_FuRIouS':
+      'Resincronia para esta versão em HD: Jehhuty':
+      'SINCRONIA:':
+      'Sincronia by DanDee':
+      'Sincronia BDRIP 720p - Nathan':
+      ? |
+        Sincronia
+        skØad
+      :
+      ? |
+        <b>Sincronia BluRay:
+        FooBar</b>
+      :
+      # real dialogue must survive
+      'Certo, sincronia.': 'Certo, sincronia.'
+      'Sincronia perfeita de tempo e espaço.': 'Sincronia perfeita de tempo e espaço.'
+      'Fora de sincronia?': 'Fora de sincronia?'
+      'Que sincronismo!': 'Que sincronismo!'
+      'SINCRONIZAÇÃO CONCLUÍDA': 'SINCRONIZAÇÃO CONCLUÍDA'
+      'Perda de sincronização': 'Perda de sincronização'
+      'Preciso ressincronizar os relógios.': 'Preciso ressincronizar os relógios.'
+      ? |
+        Vamos sincronizar os relógios:
+        agora.
+      : |
+        Vamos sincronizar os relógios:
+        agora.
+
+  drop-anti-piracy-notices[no-spam:pt]:
+    <<: *no-spam-regex-multiline-ignorecase
+    patterns:
+      # "pirata"/"piratas"/"pirataria" is common in real dialogue, so it only counts as
+      # spam next to the wording of an anti-piracy notice (the gap may cross the line
+      # break inside the entry, which is where these notices usually wrap).
+      - '\bpirata(?:ria)?s?\b[\s\S]{0,60}(?:denunci\w+|incentiv\w+|financi\w+|crime organizado|\b[ée]\s+crime\b)'
+      - '(?:denunci\w+|incentiv\w+|financi\w+|crime organizado|\b[ée]\s+crime\b)[\s\S]{0,60}\bpirata(?:ria)?s?\b'
+      - '\bdenuncie\s+o\s+vendedor\b'
+      - '\bbaixe\s+seus?\s+pr[óo]prios?\b'
+    examples:
+      ? |
+        Se você comprou um DVD pirata com
+        este arquivo, denuncie o vendedor à polícia!
+      :
+      ? |
+        Comprar DVD pirata é incentivar o crime organizado!
+        Baixe seus próprios filmes!
+      :
+      'Pirataria é crime.':
+      # real dialogue must survive
+      'vendendo DVDs piratas.': 'vendendo DVDs piratas.'
+      'Acha que o crime organizado...': 'Acha que o crime organizado...'
+      'Denuncie então.': 'Denuncie então.'
+      'Um navio pirata na costa.': 'Um navio pirata na costa.'
+      ? |
+        Foi acusado de atos de pirataria
+        em alto-mar.
+      : |
+        Foi acusado de atos de pirataria
+        em alto-mar.
+
   drop-ads-and-credits-regex-exact[no-spam:pt]:
     <<: *no-spam-regex-multiline-ignorecase
     patterns:
