@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.1
+
+**Release date:** 2026-09-20
+
+- Add `--version` option to the CLI
+- Stop release tags like DTS, AAC, SDR, and SDH from being detected as languages
+- Switch lint hook to pre-commit
+
 ## 0.5.0
 
 **Release date:** 2026-09-18
