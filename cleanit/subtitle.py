@@ -12,6 +12,29 @@ from .rule import Change, Changes, Rules
 logger = logging.getLogger(__name__)
 
 
+# Release tags that also happen to be valid but obscure ISO 639-3 codes with no ISO 639-1
+# equivalent. A subtitle filename ending in one of these almost always carries over a leftover
+# release/media tag from the video file it was ripped from, not an actual language.
+# See https://github.com/ratoaq2/pgsrip/issues/116 and cleanit/knowit's media codec lists at
+# https://github.com/ratoaq2/knowit/blob/main/knowit/defaults.yml
+NON_LANGUAGE_CODES = {
+    "aac",  # AAC audio codec (vs Ari)
+    "asp",  # MPEG-4 ASP video codec (vs Algerian Sign Language)
+    "ass",  # Advanced SubStation Alpha subtitle format (vs Ipulo)
+    "cbr",  # constant bit rate (vs Cashibo-Cacataibo)
+    "dts",  # DTS audio codec (vs Toro So Dogon)
+    "hra",  # DTS-HD HRA audio profile (vs Hrangkhol)
+    "low",  # video profile level (vs Tampias Lobu)
+    "pcm",  # PCM audio codec (vs Nigerian Pidgin)
+    "pgs",  # Presentation Graphic Stream subtitle format (vs Pangseng)
+    "png",  # image-based subtitle track (vs Pongu)
+    "pro",  # audio profile / Professional (vs Old Provençal)
+    "srt",  # SubRip subtitle format (vs Sauri)
+    "sdh",  # Subtitles for Deaf and Hard of hearing (vs Southern Kurdish)
+    "sdr",  # Standard Dynamic Range (vs Oraon Sadri)
+}
+
+
 class CleanitLanguageConverter(LanguageReverseConverter):  # type: ignore[misc]
     @property
     def codes(self) -> set[str]:
@@ -29,6 +52,9 @@ class CleanitLanguageConverter(LanguageReverseConverter):  # type: ignore[misc]
 
     def reverse(self, name: str) -> tuple[str, str | None, str | None]:
         name = name.lower()
+        if name in NON_LANGUAGE_CODES:
+            return "und", None, None
+
         for conv in [
             Language.fromietf,
             Language,
