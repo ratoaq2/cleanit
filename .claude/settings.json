@@ -1,18 +1,1 @@
-{
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python .claude/hooks/post_edit_lint.py",
-            "shell": "bash",
-            "timeout": 60,
-            "statusMessage": "Running ruff/mypy..."
-          }
-        ]
-      }
-    ]
-  }
-}
+{}

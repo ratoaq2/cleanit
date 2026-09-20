@@ -1,6 +1,6 @@
 [project]
 name = "cleanit"
-version = "0.5.0"
+version = "0.5.1-dev"
 description = "Subtitles extremely clean"
 authors = [
     { name = "Rato" },
@@ -52,6 +52,7 @@ cleanit = "cleanit.cli:cleanit"
 [dependency-groups]
 dev = [
     "mypy>=1.14.1",
+    "pre-commit>=4.0.0",
     "pytest>=8.4.1",
     "pytest-cov>=6.2.1",
     "ruff>=0.9.4",
