@@ -40,6 +40,7 @@ AGE = AgeParamType()
 
 
 @click.command()
+@click.version_option()
 @click.option("-c", "--config", type=click.Path(), help="YAML config file to be used")
 @click.option(
     "-l",
