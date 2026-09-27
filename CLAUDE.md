@@ -35,8 +35,8 @@ uv run cleanit -t ocr -t no-sdh -t tidy -l en -l pt-BR /path/to/subtitles
 uv run cleanit -t default --test --debug some.srt   # dry run with verbose per-file logging
 ```
 
-CI (`.github/workflows/test.yml`) runs the `test` job (via `scripts/test.sh`) across Python
-3.10–3.14, and a separate `lint` job running ruff check, ruff format --check, and mypy on `cleanit`.
+CI (`.github/workflows/test.yml`) runs the `test` job (via `scripts/test.sh`) across the
+Python versions of its matrix, and a separate `lint` job running ruff check, ruff format --check, and mypy on `cleanit`.
 
 ## Architecture
 
