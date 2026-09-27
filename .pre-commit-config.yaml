@@ -1,3 +1,5 @@
+default_stages: [pre-commit]
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
@@ -28,3 +30,15 @@ repos:
         language: system
         pass_filenames: false
         types: [python]
+      - id: check-knowledge
+        name: check knowledge references
+        entry: uv run python scripts/check_knowledge.py
+        language: system
+        pass_filenames: false
+        always_run: true
+
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v4.4.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
