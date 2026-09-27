@@ -20,7 +20,7 @@ too.
 - Strict mypy: annotate every function.
 - Ruff formats the code. Its settings are in `pyproject.toml`. Do not format by hand against it.
 - Flat package layout: `cleanit/`, not `src/cleanit/`.
-- Put cleaning behavior in the YAML rules of `cleanit/data/`, not in Python.
+- Put cleaning behavior in the YAML rules of `cleanit/data/`, not in Python. See `docs/rules.md`.
 
 ## Branches
 
@@ -45,4 +45,4 @@ too.
 ## Writing
 
 Write all text (comments, docs, commits, PRs, issues) in ASD-STE100 Simplified Technical English. Most
-contributors are not native English speakers.
+contributors are not native English speakers. See `.claude/skills/writing-style/SKILL.md`.
