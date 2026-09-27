@@ -21,7 +21,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 RULES_DIR = ".claude/rules"
-KNOWLEDGE_GLOBS = ("CLAUDE.md", "CONTRIBUTING.md", "docs/**/*.md", ".claude/**/*.md")
+KNOWLEDGE_GLOBS = ("AGENTS.md", "CONTRIBUTING.md", "docs/**/*.md", ".claude/**/*.md")
 PLACEHOLDER_CHARS = frozenset("<>*{}[]|$")
 
 FENCED_BLOCK = re.compile(r"^```.*?^```", re.MULTILINE | re.DOTALL)
@@ -142,7 +142,7 @@ def report_changed(base: str) -> None:
     files = repo_files()
     rules = covering_rules(ROOT, files, changed)
     if not rules:
-        print(f"No rule covers the {len(changed)} changed files. Check CLAUDE.md and CONTRIBUTING.md only.")
+        print(f"No rule covers the {len(changed)} changed files. Check AGENTS.md and CONTRIBUTING.md only.")
         return
     for rule, covered in rules.items():
         docs = path_references((ROOT / rule).read_text(encoding="utf-8"), ("docs/",))

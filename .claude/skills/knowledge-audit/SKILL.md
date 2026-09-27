@@ -11,7 +11,7 @@ disable-model-invocation: true
 ## Steps
 
 1. Run `uv run python scripts/check_knowledge.py`. Fix each error first.
-2. List the knowledge files: `CLAUDE.md`, `CONTRIBUTING.md`, `docs/*.md`, `.claude/rules/*.md`,
+2. List the knowledge files: `AGENTS.md`, `CONTRIBUTING.md`, `docs/*.md`, `.claude/rules/*.md`,
    `.claude/skills/*/SKILL.md`.
 3. For each file, check each statement against the code, `pyproject.toml`, the CI workflows, and
    `gh label list`. Look for:
@@ -23,7 +23,7 @@ disable-model-invocation: true
      cover a related file.
    - **Style**: text that does not follow `writing-style`.
 4. Check the HOT cost with `/context` in a new session:
-   - `CLAUDE.md` should stay below about 900 tokens. It imports no other file.
+   - `AGENTS.md` should stay below about 900 tokens. It imports no other file.
    - Each project skill should stay below about 50 tokens in the skill list.
    - The `skillOverrides` in `.claude/settings.json` should still hide the built-in skills that this project
      does not use.

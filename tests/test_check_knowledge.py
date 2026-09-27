@@ -63,7 +63,7 @@ def test_top_level_dirs(ck: ModuleType) -> None:
 
 def test_check_finds_broken_references(ck: ModuleType, tmp_path: Path) -> None:
     files = {
-        "CLAUDE.md": "See `docs/a.md` and `docs/missing.md`. Python 3.10 to 3.14.",
+        "AGENTS.md": "See `docs/a.md` and `docs/missing.md`. Python 3.10 to 3.14.",
         "docs/a.md": "Code in `pkg/`.",
         "pkg/core.py": "",
         ".claude/rules/r.md": '---\npaths:\n  - "pkg/*.py"\n  - "pkg/gone.py"\n---\n',
@@ -74,8 +74,8 @@ def test_check_finds_broken_references(ck: ModuleType, tmp_path: Path) -> None:
 
     assert ck.check(tmp_path, list(files)) == [
         ".claude/rules/r.md: paths glob `pkg/gone.py` matches no file",
-        "CLAUDE.md: `docs/missing.md` does not exist",
-        "CLAUDE.md: `Python 3.10` copies a version. Name the file that owns it",
+        "AGENTS.md: `docs/missing.md` does not exist",
+        "AGENTS.md: `Python 3.10` copies a version. Name the file that owns it",
     ]
 
 

@@ -9,7 +9,7 @@ Read `CONTRIBUTING.md` first. Follow it for the branch, commit, and PR rules. Do
 
 ## 1. Smaller diff
 
-Read the diff (`git diff main...`) with the "Code: lazy senior dev" steps of `CLAUDE.md`. Remove code
+Read the diff (`git diff main...`) with the "Code: lazy senior dev" steps of `AGENTS.md`. Remove code
 that the change does not need: unused options, new helpers that copy existing code, and extra
 abstractions. For a large diff, also run `/simplify`.
 
@@ -22,8 +22,8 @@ This step keeps the AI knowledge correct. Do not skip it.
 2. Read each listed rule and doc. Compare each statement with the diff (`git diff main...`).
 3. Also check:
    - `docs/architecture.md`, if you added, removed, or renamed a module.
-   - The commands in `CLAUDE.md` and the setup in `CONTRIBUTING.md`, if you changed the tools.
-   - `CLAUDE.md`, if the change makes one of its rules wrong.
+   - The commands in `AGENTS.md` and the setup in `CONTRIBUTING.md`, if you changed the tools.
+   - `AGENTS.md`, if the change makes one of its rules wrong.
 4. Fix each wrong statement in the same commit as the code change. Follow `.claude/rules/knowledge.md`.
 5. If you learned a fact that the next person needs, add it to the correct owner file.
 

@@ -10,7 +10,7 @@ Each fact has one owner file. Other files link to the owner. Do not copy the fac
 
 | Load tier | File | Put here |
 | --- | --- | --- |
-| HOT (every session) | `CLAUDE.md` | Commands and rules that almost every task needs. Keep it short. |
+| HOT (every session) | `AGENTS.md` | Commands and rules that almost every task needs. Keep it short. |
 | COLD (linked) | `CONTRIBUTING.md` | Setup, branch, commit, and PR rules, for humans and AI. `ship` reads it. |
 | WARM (by path) | `.claude/rules/<topic>.md` | A constraint for some paths: 1-5 lines, then a link to the doc. |
 | WARM (by task) | `.claude/skills/<name>/SKILL.md` | A repeated procedure. Templates go next to it. |
@@ -20,7 +20,7 @@ Each fact has one owner file. Other files link to the owner. Do not copy the fac
 Rules for knowledge files:
 
 - The HOT files cost tokens in every session. Add a line there only when almost every task needs it.
-  Move everything else to a rule, a skill, or a doc. Do not import other files into `CLAUDE.md`.
+  Move everything else to a rule, a skill, or a doc. Do not import other files into `AGENTS.md`.
 - Keep each skill `description` short (about 40 tokens). Give it the trigger words. Add
   `disable-model-invocation: true` to a skill that only a person must start.
 - A rule has `paths:` frontmatter. Every glob must match a tracked file (`scripts/check_knowledge.py`

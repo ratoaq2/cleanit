@@ -11,12 +11,12 @@ pre-commit runs ruff, mypy, the knowledge check, and the Conventional Commits ch
 
 ## Commands
 
-The command list is in `CLAUDE.md`. Claude Code loads that file in each session, and people can read it
+The command list is in `AGENTS.md`. AI agents load that file in each session, and people can read it
 too.
 
 ## Code
 
-- Keep the code small. See "Code: lazy senior dev" in `CLAUDE.md`.
+- Keep the code small. See "Code: lazy senior dev" in `AGENTS.md`.
 - Strict mypy: annotate every function.
 - Ruff formats the code. Its settings are in `pyproject.toml`. Do not format by hand against it.
 - Flat package layout: `cleanit/`, not `src/cleanit/`.
