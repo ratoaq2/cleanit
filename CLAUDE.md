@@ -17,14 +17,14 @@ Dependency management and running things is done via `uv`.
 uv sync --locked --all-groups        # install/sync dependencies (matches CI)
 
 # tests
-bash scripts/test.sh                                  # what CI runs: verbose + coverage
+bash scripts/test.sh                                  # what CI runs: lint, mypy, tests + coverage
 uv run pytest tests/                                  # quick run
 uv run pytest tests/test_rule.py                      # rule-example tests only
 uv run pytest tests/test_data.py                       # fixture/case tests only
 uv run pytest tests/test_data.py -k "case-slug"        # a single fixture case (see below)
 uv run pytest tests/test_rule.py -k "some snippet of the example's input text"  # a single rule example
 
-# lint / type-check (all part of CI's `lint` job)
+# lint / type-check (also run by scripts/test.sh)
 uv run ruff check .
 uv run ruff format --check .          # add --fix / drop --check to auto-fix
 uv run mypy cleanit
@@ -36,7 +36,7 @@ uv run cleanit -t default --test --debug some.srt   # dry run with verbose per-f
 ```
 
 CI (`.github/workflows/test.yml`) runs the `test` job (via `scripts/test.sh`) across the
-Python versions of its matrix, and a separate `lint` job running ruff check, ruff format --check, and mypy on `cleanit`.
+Python versions of its matrix. That script runs the lint, type, and test checks.
 
 ## Architecture
 
