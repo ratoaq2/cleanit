@@ -4,7 +4,8 @@ from collections import UserList
 from collections.abc import Collection, Iterable, Iterator
 
 from babelfish import Language
-from pysrt import SubRipFile, SubRipItem
+from pysubs2 import SSAEvent
+from pysubs2.formats.subrip import SubripFormat
 
 from .utils import ensure_list, get_language_groups
 
@@ -12,11 +13,11 @@ logger = logging.getLogger(__name__)
 
 
 class Change:
-    def __init__(self, item: SubRipItem) -> None:
+    def __init__(self, item: SSAEvent) -> None:
         self._max_chars = 50
-        self.start = item.start
-        self.end = item.end
-        self.a_lines = [line for line in item.text.split("\n")]
+        self.start = SubripFormat.ms_to_timestamp(item.start)
+        self.end = SubripFormat.ms_to_timestamp(item.end)
+        self.a_lines = item.text.split("\\N")
         self.b_lines = self.a_lines
         self.rules: list[str] = []
 
@@ -66,9 +67,9 @@ class Change:
 
 
 class Changes(UserList[Change]):
-    def __init__(self, srt: SubRipFile) -> None:
+    def __init__(self, path: str) -> None:
         super().__init__()
-        self.path = srt.path
+        self.path = path
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} [{self.path}:{len(self)}]>"

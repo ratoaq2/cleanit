@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 import pytest
@@ -75,3 +76,25 @@ def test_save_keeps_encoding(tmp_path: Path) -> None:
     expected = "1\n00:00:01,000 --> 00:00:02,000\n- A criança está aqui.\n- Sim.\n\n"
 
     assert clean_and_save(tmp_path / "movie.pt-BR.srt", data.encode("latin-1"), {"tidy"}) == expected.encode("latin-1")
+
+
+def test_clean_loses_last_line_with_only_a_number_in_last_entry(tmp_path: Path) -> None:
+    # known pysubs2 limit: the reader takes this line for the index of a next entry
+    first = "1\n00:00:01,000 --> 00:00:02,000\nInvented Town\n1963\n\n"
+    data = first + "2\n00:00:03,000 --> 00:00:04,000\n-Yes.\n-No.\n\n"
+    data += "3\n00:00:05,000 --> 00:00:06,000\nInvented Town\n1963\n\n"
+    expected = first + "2\n00:00:03,000 --> 00:00:04,000\n- Yes.\n- No.\n\n"
+    expected += "3\n00:00:05,000 --> 00:00:06,000\nInvented Town\n\n"
+
+    assert clean_and_save(tmp_path / "movie.en.srt", data.encode(), {"tidy"}) == expected.encode()
+
+
+def test_clean_logs_changes(tmp_path: Path, caplog: pytest.LogCaptureFixture) -> None:
+    data = "1\n00:00:01,000 --> 00:00:02,000\n-Where is he?\n-Here.\n\n"
+
+    with caplog.at_level(logging.DEBUG, logger="cleanit"):
+        clean_and_save(tmp_path / "movie.en.srt", data.encode(), {"tidy"})
+
+    assert "00:00:01,000 --> 00:00:02,000" in caplog.text
+    assert "-Where is he?" in caplog.text
+    assert "- Where is he?" in caplog.text

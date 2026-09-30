@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Use pysubs2 in place of pysrt to read and write subtitles
+- Breaking: `Subtitle.subtitle` is a `pysubs2.SSAFile`, `Change` takes a `pysubs2.SSAEvent`, and `Changes`
+  takes a path
+- Output changes: no space at the start of an entry, the index is always 1, 2, 3, and a last line with
+  only a number in the last entry is lost
+
 ## 0.5.1
 
 **Release date:** 2026-09-20

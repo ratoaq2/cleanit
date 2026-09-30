@@ -3,9 +3,8 @@ import os
 from io import StringIO
 
 import chardet
-import pysrt
 from babelfish import Language, LanguageReverseConverter, LanguageReverseError, country_converters, language_converters
-from pysrt import SubRipFile
+from pysubs2 import SSAFile
 
 from .rule import Change, Changes, Rules
 
@@ -85,7 +84,8 @@ class Subtitle:
         self.path = path
         self.language = get_subtitle_language(path)
         self.encoding = encoding
-        self.subtitle: SubRipFile | None = None
+        self.eol: str = os.linesep
+        self.subtitle: SSAFile | None = None
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} [{self.path}]>"
@@ -93,10 +93,7 @@ class Subtitle:
     @property
     def content(self) -> str | None:
         if self.subtitle:
-            writer = StringIO()
-            self.subtitle.write_into(writer, eol="\n")
-            writer.seek(0)
-            return writer.read().strip()
+            return self.subtitle.to_string("srt", keep_ssa_tags=True).strip()
         return None
 
     @property
@@ -109,7 +106,23 @@ class Subtitle:
     def save(self, path: str | None = None, encoding: str | None = None) -> None:
         if self.subtitle is None:
             raise RuntimeError(f"Subtitle {self.name} has not been loaded yet, call clean() first")
-        self.subtitle.save(path=path or self.path, encoding=encoding or self.encoding)
+        with open(path or self.path, "w", encoding=encoding or self.encoding, newline=self.eol) as f:
+            self.subtitle.to_file(f, "srt", keep_ssa_tags=True)
+
+    def read(self) -> SSAFile:
+        with open(self.path, encoding=self.encoding, newline="") as f:
+            text = f.read()
+
+        # keep the line ending of the first line, as pysrt did
+        first_line = next(iter(text.splitlines(keepends=True)), "")
+        self.eol = next((eol for eol in ("\r\n", "\r", "\n") if first_line.endswith(eol)), os.linesep)
+
+        # newline=None reads "\r\n" and "\r" as "\n". keep_html_tags keeps <i>, <font>, and <text> as they are
+        subtitle = SSAFile.from_file(StringIO(text, newline=None), "srt", keep_html_tags=True)
+        for event in subtitle:
+            event.text = "\\N".join(line.rstrip() for line in event.text.split("\\N"))
+
+        return subtitle
 
     def guess_encoding(self) -> str | None:
         with open(self.path, "rb") as f:
@@ -159,20 +172,21 @@ class Subtitle:
     def clean(self, rules: Rules, clean_indexes: bool = True) -> bool:
         rules = Rules(rules=rules, tags=rules.tags, languages={self.language})
         self.encoding = self.encoding or self.guess_encoding()
-        self.subtitle = pysrt.open(self.path, encoding=self.encoding)
+        self.subtitle = self.read()
         track_changes = logger.isEnabledFor(logging.DEBUG)
-        changes = Changes(self.subtitle) if track_changes else None
+        changes = Changes(self.path) if track_changes else None
 
         modified = False
-        for i, item in reversed(list(enumerate(self.subtitle))):
-            change = Change(item) if track_changes else None
-            text, changed = rules.apply(item.text, change=change)
+        for i, event in reversed(list(enumerate(self.subtitle))):
+            change = Change(event) if track_changes else None
+            # the rules use "\n" for a new line, pysubs2 uses \N
+            text, changed = rules.apply(event.text.replace("\\N", "\n"), change=change)
             if changed:
                 modified = True
                 if not text:
                     del self.subtitle[i]
                 else:
-                    item.text = text
+                    event.text = text.replace("\n", "\\N")
                 if track_changes:
                     assert changes is not None
                     assert change is not None
@@ -187,7 +201,7 @@ class Subtitle:
 
                 logger.debug(f"Changes for {changes}")
             if clean_indexes:
-                self.subtitle.clean_indexes()
+                self.subtitle.sort()
 
         return modified
 
