@@ -13,8 +13,7 @@ cases_path = Path(__file__).parent / "data" / "cases"
 def _normalize(srt_path: Path) -> str | None:
     """Read an expected fixture the same way as Subtitle, so the comparison ignores the SRT layout."""
     subtitle = Subtitle(str(srt_path), encoding="utf-8")
-    subtitle.subtitle = subtitle.read()
-    subtitle.subtitle.sort()
+    subtitle.clean(Rules([]))
     return subtitle.content
 
 

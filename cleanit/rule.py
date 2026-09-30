@@ -4,8 +4,6 @@ from collections import UserList
 from collections.abc import Collection, Iterable, Iterator
 
 from babelfish import Language
-from pysubs2 import SSAEvent
-from pysubs2.formats.subrip import SubripFormat
 
 from .utils import ensure_list, get_language_groups
 
@@ -13,11 +11,11 @@ logger = logging.getLogger(__name__)
 
 
 class Change:
-    def __init__(self, item: SSAEvent) -> None:
+    def __init__(self, start: str, end: str, lines: list[str]) -> None:
         self._max_chars = 50
-        self.start = SubripFormat.ms_to_timestamp(item.start)
-        self.end = SubripFormat.ms_to_timestamp(item.end)
-        self.a_lines = item.text.split("\\N")
+        self.start = start
+        self.end = end
+        self.a_lines = lines
         self.b_lines = self.a_lines
         self.rules: list[str] = []
 
