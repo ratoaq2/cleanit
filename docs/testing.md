@@ -19,7 +19,11 @@ uv run pytest -q --tb=short tests/test_rule.py -k "some text of the example inpu
 
 Each folder in `tests/data/cases/` is one case. `tests/test_data.py` runs `Subtitle.clean` on the input
 file, with the rules of the case, and compares the result with the expected file. This checks the rule
-selection by tag and language, the order of the rules, and the new entry numbers.
+selection by tag and language, the order of the rules, and the order of the entries.
+
+The test uses the input file as it is, so an input can have the layout of a real file. The test reads the
+expected file in the same way as `Subtitle` before the comparison. The entry numbers, the blank lines, and
+the line endings of the expected file do not change the result.
 
 A case folder contains:
 
