@@ -1,6 +1,5 @@
 from pathlib import Path
 
-import pysrt
 import pytest
 import yaml
 
@@ -11,11 +10,11 @@ from cleanit.subtitle import Subtitle, get_subtitle_language
 cases_path = Path(__file__).parent / "data" / "cases"
 
 
-def _reformat(srt_path: Path) -> None:
-    """Normalize a fixture through pysrt so its on-disk formatting matches what Subtitle.content produces."""
-    srt = pysrt.open(str(srt_path))
-    srt.clean_indexes()
-    srt.save()
+def _normalize(srt_path: Path) -> str | None:
+    """Read an expected fixture the same way as Subtitle, so the comparison ignores the SRT layout."""
+    subtitle = Subtitle(str(srt_path), encoding="utf-8")
+    subtitle.clean(Rules([]))
+    return subtitle.content
 
 
 def generate_params():
@@ -29,8 +28,6 @@ def generate_params():
         # Subtitle does for real files, so a case can never drift out of sync with what it tests.
         (input_file,) = case_dir.glob("input.*.srt")
         (expected_file,) = case_dir.glob("expected.*.srt")
-        _reformat(input_file)
-        _reformat(expected_file)
 
         rules = cfg.select_rules(tags=tags, languages={get_subtitle_language(str(input_file))})
         params.append(pytest.param(rules, input_file, expected_file, id=case_dir.name))
@@ -42,7 +39,7 @@ def generate_params():
 def test_data_files(rules: Rules, input_file: Path, expected_file: Path) -> None:
     # given
     subtitle = Subtitle(str(input_file))
-    expected_text = expected_file.read_text(encoding="utf-8").strip()
+    expected_text = _normalize(expected_file)
     # when
     subtitle.clean(rules)
     # then
