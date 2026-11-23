@@ -73,7 +73,7 @@ class Config:
         locations = [path] if path and os.path.isfile(path) else []
 
         for folder in folders:
-            locations.extend([f for f in os.listdir(folder) if FILENAME_RE.search(f)])
+            locations.extend([os.path.join(folder, f) for f in os.listdir(folder) if FILENAME_RE.search(f)])
 
         return Config(*load_configuration(*locations))
 
