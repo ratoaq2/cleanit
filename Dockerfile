@@ -1,4 +1,4 @@
-FROM ghcr.io/astral-sh/uv:python3.14-bookworm-slim AS builder
+FROM ghcr.io/astral-sh/uv:python3.15-trixie-slim AS builder
 
 ENV PYTHONFAULTHANDLER=1 \
     PYTHONUNBUFFERED=1 \
@@ -14,7 +14,7 @@ COPY cleanit/ /app/cleanit/
 RUN uv build
 
 
-FROM python:3.14-slim
+FROM python:3.15-slim
 
 ENV PYTHONFAULTHANDLER=1 \
     PYTHONUNBUFFERED=1 \

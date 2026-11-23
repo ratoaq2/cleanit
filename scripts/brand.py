@@ -22,10 +22,10 @@ So the output does not depend on the fonts of the computer.
 The cleanit name, logo, and icon are not covered by the Apache License 2.0 of this repository.
 """
 
+import tomllib
 from pathlib import Path
 
 import resvg_py
-import tomllib
 from fontTools.pens.svgPathPen import SVGPathPen
 from fontTools.pens.transformPen import TransformPen
 from fontTools.ttLib import TTFont
