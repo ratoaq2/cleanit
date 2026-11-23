@@ -1,6 +1,9 @@
-# CleanIt
-
-Subtitles extremely clean.
+<h1 align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/ratoaq2/cleanit/main/docs/images/logo-dark.png">
+    <img alt="cleanit: Clean your subtitles" src="https://raw.githubusercontent.com/ratoaq2/cleanit/main/docs/images/logo-light.png" width="400">
+  </picture>
+</h1>
 
 [![Latest Version](https://img.shields.io/pypi/v/cleanit.svg)](https://pypi.python.org/pypi/cleanit)
 [![Supported versions](https://img.shields.io/pypi/pyversions/cleanit.svg)](https://pypi.python.org/pypi/cleanit)
@@ -191,3 +194,5 @@ Bug reports and pull requests are welcome.
 ## License
 
 [Apache License 2.0](https://github.com/ratoaq2/cleanit/blob/main/LICENSE).
+
+The cleanit name, logo, and icon are not covered by the Apache License 2.0. All rights reserved.

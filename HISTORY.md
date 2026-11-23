@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add a logo and the new tagline "Clean your subtitles"
+
 ## 0.5.1
 
 **Release date:** 2026-09-20
