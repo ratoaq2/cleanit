@@ -5,12 +5,23 @@
   </picture>
 </h1>
 
-[![Latest Version](https://img.shields.io/pypi/v/cleanit.svg)](https://pypi.python.org/pypi/cleanit)
-[![Supported versions](https://img.shields.io/pypi/pyversions/cleanit.svg)](https://pypi.python.org/pypi/cleanit)
-[![tests](https://github.com/ratoaq2/cleanit/actions/workflows/test.yml/badge.svg)](https://github.com/ratoaq2/cleanit/actions/workflows/test.yml)
+cleanit fixes OCR errors and removes clutter from your `.srt` subtitle files.
+
+[![PyPI version](https://img.shields.io/pypi/v/cleanit.svg)](https://pypi.org/project/cleanit/)
+[![Python versions](https://img.shields.io/pypi/pyversions/cleanit.svg)](https://pypi.org/project/cleanit/)
+[![Tests](https://github.com/ratoaq2/cleanit/actions/workflows/test.yml/badge.svg)](https://github.com/ratoaq2/cleanit/actions/workflows/test.yml)
+[![Docker pulls](https://img.shields.io/docker/pulls/ratoaq2/cleanit.svg)](https://hub.docker.com/r/ratoaq2/cleanit)
 [![License](https://img.shields.io/github/license/ratoaq2/cleanit.svg)](https://github.com/ratoaq2/cleanit/blob/main/LICENSE)
 
-CleanIt fixes OCR errors and removes clutter from `.srt` subtitle files.
+![cleanit cleans a subtitle file: before and after](https://raw.githubusercontent.com/ratoaq2/cleanit/main/docs/images/demo.gif)
+
+## Why cleanit
+
+OCR tools make text subtitles from image subtitles. The text often has errors, for example `l` in place of
+`I`. Many subtitles also have text that you do not want: sound descriptions, song lyrics, ads, and style
+tags.
+
+cleanit finds these problems with a set of rules, and fixes them:
 
 | Before | After |
 | --- | --- |
@@ -18,28 +29,102 @@ CleanIt fixes OCR errors and removes clutter from `.srt` subtitle files.
 | `- If you cross the sea`<br>`with an army you bought ...` | `If you cross the sea`<br>`with an army you bought...` |
 | `[DOOR SLAMS]` | *(entry removed)* |
 
+[pgsrip](https://github.com/ratoaq2/pgsrip) uses cleanit to clean the subtitles after the OCR.
+
 ## Quick start
 
-You need [uv](https://docs.astral.sh/uv/). First, see what CleanIt will change. `--test` does not change
-the file:
+1. Install [uv](https://docs.astral.sh/uv/getting-started/installation/).
+2. See what cleanit will change. `--test` does not change the file:
 
-```console
-$ uvx cleanit -t default --test --debug movie.en.srt
-```
+   ```console
+   $ uvx cleanit -t default --test --debug movie.en.srt
+   ```
 
-Then clean the file:
+3. Clean the file:
 
-```console
-$ uvx cleanit -t default movie.en.srt
-1 subtitle collected / 0 subtitle filtered out / 0 path ignored
-1 subtitle saved / 0 subtitle unchanged
-```
+   ```console
+   $ uvx cleanit -t default movie.en.srt
+   Collecting subtitles  [####################################]  100%
+   1 subtitle collected / 0 subtitle filtered out / 0 path ignored
+   Cleaning subtitles  [####################################]  100%
+   1 subtitle saved / 0 subtitle unchanged
+   ```
 
 > [!WARNING]
-> CleanIt writes the result into the same file. It does not make a backup. Use `--test` first, or keep a
+> cleanit writes the result into the same file. It does not make a backup. Use `--test` first, or keep a
 > copy of your files.
 
-## What it cleans
+## Installation
+
+Use one of these commands:
+
+| Command | When to use it |
+| --- | --- |
+| `uvx cleanit` | You want to use cleanit without installing it. |
+| `uv tool install cleanit` | Recommended. This adds `cleanit` to your `PATH`. |
+| `pip install cleanit` | You want to use cleanit as a Python library. |
+
+To upgrade, use `uv tool upgrade cleanit`.
+
+### Docker
+
+cleanit is also available as a [Docker image](https://hub.docker.com/r/ratoaq2/cleanit):
+
+```console
+$ docker run -it --rm -v /medias:/medias -u $(id -u):$(id -g) ratoaq2/cleanit -t default /medias
+1072 subtitles collected / 0 subtitle filtered out / 0 path ignored
+Cleaning subtitles  [####################################]  100%
+980 subtitles saved / 92 subtitles unchanged
+```
+
+## Usage
+
+Clean one file:
+
+```console
+$ cleanit -t default movie.en.srt
+```
+
+Clean all `.srt` files in a folder and its subfolders:
+
+```console
+$ cleanit -t default ~/subtitles/
+423 subtitles collected / 0 subtitle filtered out / 0 path ignored
+Cleaning subtitles  [####################################]  100%
+268 subtitles saved / 155 subtitles unchanged
+```
+
+Clean only the English and the Brazilian Portuguese files:
+
+```console
+$ cleanit -t default -l en -l pt-BR ~/subtitles/
+```
+
+Clean only the files that changed in the last 2 days:
+
+```console
+$ cleanit -t default -a 2d ~/subtitles/
+```
+
+Fix only the OCR errors, spaces, and punctuation. Keep all entries:
+
+```console
+$ cleanit -t minimal movie.en.srt
+```
+
+Also remove the style tags, for example `<i>`:
+
+```console
+$ cleanit -t default -t no-style movie.en.srt
+```
+
+See each change, with the rule name, and the text before and after:
+
+```console
+$ cleanit -t default --debug movie.en.srt
+```
+
+### Rule tags
 
 Select the rules with one or more `-t` tags:
 
@@ -57,9 +142,9 @@ Two tags select a group of rules:
 - `minimal`: `ocr` and `tidy`.
 - `default`: all rules except `no-style`.
 
-## Languages
+### Languages
 
-CleanIt reads the language from the file name: `movie.en.srt` is English, and `movie.pt-BR.srt` is
+cleanit reads the language from the file name: `movie.en.srt` is English, and `movie.pt-BR.srt` is
 Brazilian Portuguese.
 
 - All files get the rules for all languages.
@@ -67,45 +152,7 @@ Brazilian Portuguese.
   own spam rules. A `pt` rule also applies to `pt-BR` files.
 - A file without a language code in its name (`movie.srt`) gets only the rules for all languages.
 
-CleanIt reads only `.srt` files.
-
-## Installation
-
-Run it without installing it:
-
-```console
-$ uvx cleanit --help
-```
-
-Install it as a command (this adds `cleanit` to your `PATH`):
-
-```console
-$ uv tool install cleanit
-```
-
-Or install it with [pip](https://pip.pypa.io):
-
-```console
-$ pip install cleanit
-```
-
-## Usage
-
-Clean one file, many files, or all `.srt` files in a folder and its subfolders:
-
-```console
-$ cleanit -t default movie.en.srt
-$ cleanit -t ocr -t no-sdh -t tidy -l en -l pt-BR ~/subtitles/
-423 subtitles collected / 107 subtitles filtered out / 0 path ignored
-Cleaning subtitles  [####################################]  100%
-268 subtitles saved / 155 subtitles unchanged
-```
-
-Clean only the files that changed in the last 2 days:
-
-```console
-$ cleanit -t default -a 2d ~/subtitles/
-```
+### Main options
 
 | Option | What it does |
 | --- | --- |
@@ -120,7 +167,9 @@ $ cleanit -t default -a 2d ~/subtitles/
 | `-v`, `--verbose` | Show more messages. |
 | `--version` | Show the version. |
 
-## Custom rules
+Run `cleanit --help` for all options.
+
+### Custom rules
 
 You can add rules, or turn off a built-in rule. Write a YAML file:
 
@@ -144,7 +193,7 @@ Use the file with `-c`:
 $ cleanit -t default -c my-rules.yml movie.en.srt
 ```
 
-Or put the file in your configuration folder. CleanIt then uses it each time. The file name must start
+Or put the file in your configuration folder. cleanit then uses it each time. The file name must start
 with `cleanit` and end with `.yml`, `.yaml`, or `.json`, for example `cleanit-custom.yml`.
 
 | System | Folder |
@@ -157,39 +206,54 @@ A rule without `replacement` removes the full subtitle entry when it matches. Fo
 tips to write safe patterns, see
 [docs/rules.md](https://github.com/ratoaq2/cleanit/blob/main/docs/rules.md).
 
-## Docker
+### Python API
 
-CleanIt is also available as a [Docker image](https://hub.docker.com/r/ratoaq2/cleanit):
+You can also use cleanit in your Python code. See
+[docs/python-api.md](https://github.com/ratoaq2/cleanit/blob/main/docs/python-api.md).
 
-```console
-$ docker run -it --rm -v /medias:/medias -u $(id -u username):$(id -g username) ratoaq2/cleanit -t default /medias
-1072 subtitles collected / 0 subtitle filtered out / 0 path ignored
-Cleaning subtitles  [####################################]  100%
-980 subtitle saved / 92 subtitles unchanged
-```
+## FAQ
 
-## Python API
+**Does cleanit make a backup?**
 
-```python
-from cleanit import Config, Subtitle
+No. cleanit writes the result into the same file. Use `--test --debug` first to see the changes.
 
-sub = Subtitle("/subtitle/path/subtitle.en.srt")
-cfg = Config.from_path("/config/path")
-rules = cfg.select_rules(tags={"ocr"})
-if sub.clean(rules):
-    sub.save()
-```
+**Why did cleanit remove a full subtitle entry?**
+
+A rule without `replacement` removes the entry when it matches. Use `--debug` to see the rule name. To keep
+these entries, turn off the rule in a [custom rule file](#custom-rules).
+
+**How do I turn off one rule?**
+
+Add the rule name with `disabled: true` to a [custom rule file](#custom-rules).
+
+**Which file formats does cleanit read?**
+
+Only `.srt`.
+
+**Why does my file get only some of the rules?**
+
+cleanit reads the language from the file name. A file without a language code in its name gets only the
+rules for all languages. See [Languages](#languages).
+
+**Can I add rules for my language?**
+
+Yes. Write them in a [custom rule file](#custom-rules). To add them to cleanit for all users, read
+[CONTRIBUTING.md](https://github.com/ratoaq2/cleanit/blob/main/CONTRIBUTING.md).
+
+## Report a bug
+
+[Open an issue](https://github.com/ratoaq2/cleanit/issues). Add:
+
+- The command that you used.
+- The language of the subtitle file.
+- The text of the subtitle entry before and after. Run your command with `--test --debug` and copy the
+  output.
 
 ## Contributing
 
-Bug reports and pull requests are welcome.
-
-- To report a bug, [open an issue](https://github.com/ratoaq2/cleanit/issues). Add the command, the
-  language, and the text of the subtitle entry before and after.
-- To change the code or the rules, read
-  [CONTRIBUTING.md](https://github.com/ratoaq2/cleanit/blob/main/CONTRIBUTING.md).
-- The changes of each version are in
-  [HISTORY.md](https://github.com/ratoaq2/cleanit/blob/main/HISTORY.md).
+Pull requests are welcome. To change the code or the rules, read
+[CONTRIBUTING.md](https://github.com/ratoaq2/cleanit/blob/main/CONTRIBUTING.md). The changes of each
+version are in [HISTORY.md](https://github.com/ratoaq2/cleanit/blob/main/HISTORY.md).
 
 ## License
 

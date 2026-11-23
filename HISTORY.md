@@ -3,6 +3,8 @@
 ## Unreleased
 
 - Add a logo and the new tagline "Clean your subtitles"
+- Rewrite the README for new users, with a demo GIF and a FAQ. Move the Python API to `docs/python-api.md`
+- Fix `Config.from_path` with a folder: it loaded the rule files only when the folder was the current folder
 
 ## 0.5.1
 
