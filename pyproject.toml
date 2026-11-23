@@ -1,7 +1,7 @@
 [project]
 name = "cleanit"
 version = "0.5.2-dev"
-description = "Subtitles extremely clean"
+description = "Clean your subtitles"
 authors = [
     { name = "Rato" },
 ]
@@ -66,6 +66,7 @@ include = [
     "/scripts",
     "/tests",
 ]
+exclude = ["/scripts/brand"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["cleanit"]
