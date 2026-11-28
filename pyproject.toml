@@ -40,7 +40,7 @@ dependencies = [
     "click>=8.2.1",
     "jsonschema>=4.25.0",
     "pysrt>=1.1.2",
-    "pyyaml>=6.0.2",
+    "pyyaml>=6.0.4",
 ]
 
 [project.urls]
@@ -52,12 +52,12 @@ cleanit = "cleanit.cli:cleanit"
 [dependency-groups]
 dev = [
     "mypy>=1.14.1",
-    "pre-commit>=4.0.0",
+    "pre-commit>=4.7.0",
     "pytest>=8.4.1",
     "pytest-cov>=6.2.1",
-    "ruff>=0.9.4",
+    "ruff>=0.17.6",
     "types-jsonschema>=4.25.0",
-    "types-pyyaml>=6.0.2",
+    "types-pyyaml>=6.0.12.20261122",
 ]
 
 [tool.hatch.build.targets.sdist]
